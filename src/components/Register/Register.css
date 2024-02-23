@@ -1,0 +1,211 @@
+.form-auth__button-reg {
+    margin: 0 0 18px 0;
+  }
+  .form-auth {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 396px;
+    margin: 0 auto;
+    padding: 0px;
+  }
+  
+  .form-auth__logo {
+    margin-top: 70px;
+  }
+  
+  @media screen and (max-width: 769px) {
+    .form-auth__logo {
+      margin-top: 232px;
+    }
+  }
+  @media screen and (max-width: 601px) {
+    .form-auth__logo {
+      margin-top: 56px;
+    }
+  }
+  
+  .form-auth__title {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 37px 0 0 0;
+  }
+  
+  .form-auth__container {
+    margin-top: 40px;
+    display: grid;
+  }
+  
+  @media screen and (max-width: 769px) {
+    .form-auth__container {
+      margin-bottom: 214px;
+    }
+  }
+  @media screen and (max-width: 601px) {
+    .form-auth__container {
+      margin-bottom: 12px;
+    }
+  }
+  
+  .form-auth__subtitle {
+    font-size: 10px;
+    line-height: 1.1;
+    color: #8b8b8b;
+    font-weight: 400;
+    margin: 0 0 10px 0;
+  }
+  
+  .form-auth__input {
+    margin: 0 0 20px 0;
+    border-radius: 8px;
+    height: 46px;
+    background-color: #2f2f2f;
+    border: none;
+    padding: 15px;
+    box-sizing: border-box;
+    color: #fff;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.1;
+  }
+  
+  
+  .form-auth__input:last-child {
+    margin: 0;
+  }
+  
+  .form-auth__error {
+    color: #ee3465;
+    font-size: 10px;
+    line-height: 1.1;
+    transform: translateY(-10px);
+  }
+  
+  .form-auth__button {
+    background-color: #4285f4;
+    height: 45px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.1;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .form-auth__button:disabled {
+    background-color: #f8f8f8;
+    color: #c2c2c2;
+    cursor: auto;
+  }
+  
+  .form-auth__button:disabled:hover {
+    opacity: 1;
+  }
+  
+  .form-auth__button:hover {
+    opacity: 0.8;
+  }
+  
+  .form-auth__button-login {
+    margin: 160px 0 3px 0;
+  }
+  
+  .form-auth__button-reg {
+    margin: 74px 0 2px 0;
+  }
+  
+  .form-auth__question {
+    color: #8b8b8b;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: center;
+  }
+  
+  .form-auth__link {
+    color: #4285f4;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.2;
+    text-decoration: none;
+  }
+  
+  .form-auth__link:hover {
+    opacity: 0.7;
+  }
+  
+  .form-auth__error-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin: 50px 0 18px 0;
+  }
+  
+  .form-auth__cell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .form-auth__error-message {
+    color: #ee3465;
+    font-size: 10px;
+    line-height: 12px;
+    position: absolute;
+    top: -23px;
+  }
+  
+  .form-auth__input_error {
+    color: #ee3465;
+  }
+  
+  .form-auth__input_valid {
+    color: #fff;
+  }
+  
+  .form-auth__error-validate {
+    color: #ee3465;
+    font-family: Inter;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    position: absolute;
+    bottom: 4px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .form-auth__button-reg {
+      margin: 74px 0 4px 0;
+    }
+    .form-auth__error-container{
+      margin: 73px 0 18px 0;
+    }
+    .form-auth__button {
+      margin-top: 0px;
+    }
+  }
+  
+  @media screen and (max-width: 450px) {
+    .form-auth {
+      max-width: 260px;
+      padding: 0;
+    }
+  
+    .form-auth__title {
+      text-align: center;
+      margin: 51px 0 0 0;
+    }
+  
+    .form-auth__logo {
+      margin: 57px auto 0;
+      display: block;
+    }
+
+    .form-auth__container {
+      margin-top: 78px;
+  }
+
+  }

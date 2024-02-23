@@ -1,0 +1,31 @@
+.movies {
+    margin: 0 auto;
+    max-width: calc(1280px - 140px);
+  }
+  
+  .movies__not-found {
+    color: #ccc;
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 400;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  @media screen and (max-width: 1180px) {
+    .movies {
+      max-width: calc(100% - 80px);
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .movies {
+      max-width: calc(100% - 60px);
+    }
+  }
+  
+  @media screen and (max-width: 450px) {
+    .movies {
+      max-width: calc(100% - 20px);
+    }
+  }

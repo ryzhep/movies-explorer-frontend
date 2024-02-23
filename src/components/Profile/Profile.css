@@ -1,0 +1,151 @@
+.profile {
+    max-width: 410px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+  }
+  
+  .profile__title {
+    color: #fff;
+    font-size: 24px;
+    line-height: 1.2;
+    text-align: center;
+    font-weight: 500;
+    margin: 72px 0 0 0;
+  }
+  
+  .profile__form {
+    display: flex;
+    flex-direction: column;
+    margin: 108px 0 0 0;
+    width: 100%;
+    position: relative;
+  }
+  
+  .profile__row {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .profile__subtitle {
+    color: #fff;
+    font-size: 11px;
+    line-height: 1.1;
+    font-weight: 400;
+    position: absolute;
+    top: 16px;
+  }
+  
+  .profile__input {
+    background-color: transparent;
+    border: none;
+    text-align: right;
+    color: #fff;
+    width: 100%;
+    position: relative;
+    padding: 16px 0;
+    font-size: 11px;
+    line-height: 1.1;
+    font-weight: 400;
+  }
+  
+  .profile__input_line {
+    border-bottom: 1px solid #424242;
+  }
+  
+  .profile__input:focus-visible {
+    outline: none;
+    border-bottom: 1px solid #4285f4;
+  }
+  
+  .profile__button {
+    margin: 207px 0 0 0;
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.1;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  
+  .profile__button:hover {
+    opacity: 0.8;
+  }
+  
+  .profile__button_disabled {
+    color: #ccc;
+    cursor: auto;
+  }
+  
+  .profile__button_disabled:hover {
+    opacity: 1;
+  }
+  .profile__button-signout {
+    margin: 16px 0 0 0;
+    background-color: transparent;
+    border: none;
+    color: #ee3465;
+    font-size: 13px;
+    line-height: 1.1;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .profile__form_error {
+    color: #ee3465;
+    font-size: 13px;
+    line-height: 1.1;
+    font-weight: 500;
+    margin: 16px 0 0 0;
+  }
+  
+  .profile__button-signout:hover {
+    opacity: 0.8;
+  }
+  
+  .profile__error-server {
+    color: #ee3465;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    bottom: 25px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+  
+  .profile__error-validate {
+    color: #ee3465;
+    font-family: Inter;
+    font-size: 8px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    position: absolute;
+    bottom: -12px;
+  }
+  
+  @media screen and (max-width: 769px) {
+    .profile {
+      margin: 172px 0px 0 172px;
+    }
+    .profile__form {
+      margin: 86px 0 0 20px;
+    }
+  }
+  @media screen and (max-width: 450px) {
+    .profile {
+      max-width: 260px;
+      margin: 0 auto;
+    }
+    .profile__form {
+      margin: 65px 0 0 1px;
+    }
+
+  }

@@ -1,0 +1,19 @@
+.profile-nav{
+    display: flex;
+    color: #fff;
+    font-size: 14px;
+    line-height: 16px;
+    background-color: #313131;
+    justify-content: center;
+    width: 100px;
+    height: 32px;
+    align-items: center;
+    border-radius: 20px;
+    border: none;
+    margin: 21px 0;
+    text-decoration: none;
+  }
+  
+  .profile-nav:hover {
+    background-color: rgba(49, 49, 49, .8);
+  }

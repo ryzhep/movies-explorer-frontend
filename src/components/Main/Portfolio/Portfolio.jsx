@@ -7,8 +7,9 @@ function Portfolio() {
             <li className="portfolio__container">
               <a
                 className="portfolio__site"
-                href="/"
+                href="https://github.com/ryzhep/russian-travel"
                 target="_blank"
+                rel="noreferrer"
               >
                 <span>Статичный сайт</span>
                 <span className="portfolio__arrow">↗</span>
@@ -17,8 +18,9 @@ function Portfolio() {
             <li className="portfolio__container">
               <a
                 className="portfolio__site"
-                href="/"
+                href="https://github.com/ryzhep/how-to-learn"
                 target="_blank"
+                rel="noreferrer"
               >
                 <span>Адаптивный сайт</span>
                 <span className="portfolio__arrow">↗</span>
@@ -27,8 +29,9 @@ function Portfolio() {
             <li className="portfolio__container">
               <a
                 className="portfolio__site"
-                href="/"
+                href="https://github.com/ryzhep/react-mesto-api-full-gha"
                 target="_blank"
+                rel="noreferrer"
               >
                 <span>Одностраничное приложение</span>
                 <span className="portfolio__arrow">↗</span>

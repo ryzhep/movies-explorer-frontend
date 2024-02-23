@@ -131,8 +131,21 @@
     bottom: -12px;
   }
   
+  @media screen and (max-width: 769px) {
+    .profile {
+      margin: 172px 0px 0 172px;
+    }
+    .profile__form {
+      margin: 86px 0 0 20px;
+    }
+  }
   @media screen and (max-width: 450px) {
     .profile {
       max-width: 260px;
+      margin: 0 auto;
     }
+    .profile__form {
+      margin: 65px 0 0 1px;
+    }
+
   }

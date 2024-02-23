@@ -9,7 +9,7 @@ function SearchForm() {
         <input
           name="search"
           className="search-form__input"
-          placeholder="Фильмы"
+          placeholder="Фильм"
           type="search"
         />
         <button className="search-form__button" type="submit" />

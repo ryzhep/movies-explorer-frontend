@@ -201,4 +201,7 @@
       max-width: 430px;
       width: 100%;
     }
+    .about-me__info-description {
+    margin-bottom: 12px;
+    }
   }

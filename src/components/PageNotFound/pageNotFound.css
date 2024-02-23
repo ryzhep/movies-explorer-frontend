@@ -5,11 +5,11 @@
     flex-direction: column;
   }
   
-  .page-not-found__title{
+  .page-not-found__title {
     font-size: 140px;
     line-height: 1.1;
     color: #fff;
-    margin: 173px 0 0 0;
+    margin: 255px 0 0 0;
   }
   
   .page-not-found__subtitle {
@@ -36,7 +36,7 @@
   
   @media screen and (max-width: 768px) {
     .page-not-found__title {
-      margin: 340px 0 0 0;
+      margin: 417px 0 0 0;
     }
   }
   
@@ -44,7 +44,7 @@
     .page-not-found__title {
       font-size: 80px;
       line-height: 0;
-      margin: 303px 0 0 0;
+      margin: 379px 0 0 0;
     }
   
     .page-not-found__subtitle {

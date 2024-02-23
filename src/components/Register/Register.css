@@ -180,6 +180,12 @@
     .form-auth__button-reg {
       margin: 74px 0 4px 0;
     }
+    .form-auth__error-container{
+      margin: 73px 0 18px 0;
+    }
+    .form-auth__button {
+      margin-top: 0px;
+    }
   }
   
   @media screen and (max-width: 450px) {
@@ -190,10 +196,16 @@
   
     .form-auth__title {
       text-align: center;
+      margin: 51px 0 0 0;
     }
   
     .form-auth__logo {
-      margin: 70px auto 0;
+      margin: 57px auto 0;
       display: block;
     }
+
+    .form-auth__container {
+      margin-top: 78px;
+  }
+
   }

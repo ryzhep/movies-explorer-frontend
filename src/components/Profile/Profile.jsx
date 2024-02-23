@@ -3,7 +3,7 @@ import React from "react";
 function Profile() {
   return (
     <section className="profile">
-      <p className="profile__title">Привет, Виталя!</p>
+      <p className="profile__title">Привет, Виталий!</p>
       <form className="profile__form" noValidate>
         <div className="profile__row">
           <label className="profile__subtitle">Имя</label>
@@ -25,7 +25,7 @@ function Profile() {
             placeholder="Введите Ваш email"
             name="email"
           />
-          <span className="profile__error-validate">Что-то пошло не так</span>
+          <span className="profile__error-validate"></span>
         </div>
         <span className="profile__error-server"></span>
       </form>

@@ -1,18 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as ScrollLink } from 'react-scroll';
 
 function NavTab() {
   return (
     <nav className="navTab-list">
-      <Link className="navTab-list__link">
+      <ScrollLink className="navTab-list__link" to="about-project">
         О проекте
-      </Link>
-      <Link className="navTab-list__link">
+      </ScrollLink>
+      <ScrollLink className="navTab-list__link" to="techs">
         Технологии
-      </Link>
-      <Link className="navTab-list__link">
+      </ScrollLink>
+      <ScrollLink className="navTab-list__link" to="about-me">
         Студент
-      </Link>
+      </ScrollLink>
     </nav>
   );
 }

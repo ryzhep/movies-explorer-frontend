@@ -1,0 +1,127 @@
+.movie-card {
+  position: relative;
+  cursor: pointer;
+  max-height: 231px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.movie-card-list__container {
+  display: grid;
+  gap: 57px 30px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 80px;
+}
+
+@media screen and (max-width: 768px) {
+  .movie-card-list__container {
+    gap: 43px 30px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .movie-card-list__container {
+    gap: 35px 30px;
+    grid-template-columns: repeat(1, 1fr);
+    margin-top: 50px;
+  }
+}
+
+.movie-card__link {
+  display: flex;
+  justify-content: center;
+}
+
+.movie-card__button-save {
+  position: absolute;
+  cursor: pointer;
+  opacity: 0;
+  right: 14px;
+  top: 14px;
+  border: none;
+  transition: opacity 0.3s;
+  height: 21px;
+  width: 72px;
+  background: url(../../images/save.svg);
+  background-size: cover;
+}
+
+.movie-card:hover .movie-card__button-save {
+  opacity: 1;
+}
+
+.movie-card__button-save_active {
+  background: url(../../images/save-icon.svg) transparent no-repeat;
+  opacity: 1;
+  width: 21px;
+}
+.movie-card__button-save_delete {
+  background: url(../../images/delete.svg) transparent no-repeat;
+  opacity: 1;
+  width: 21px;
+  opacity: 0;
+}
+
+.movie-card__button-delete:hover {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.movie-card__wrap {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 14px 0;
+  box-sizing: border-box;
+}
+
+.movie-card__title {
+  font-size: 13px;
+  color: #fff;
+  line-height: 1;
+  font-weight: 400;
+  margin: 0;
+}
+
+.movie-card__times {
+  margin: 0;
+  display: flex;
+  background-color: #2f2f2f;
+  justify-content: center;
+  align-items: center;
+  color: #8b8b8b;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 400;
+  width: 52px;
+  height: 18px;
+  box-sizing: border-box;
+  border-radius: 3px;
+}
+
+.movie-card__image {
+  object-fit: contain;
+  /*max-width: 100%;*/
+  /* max-height: 201px;*/
+  display: flex;
+  border-radius: 5px;
+  min-width: 339px;
+  height: 190px;
+}
+
+@media screen and (max-width: 768px) {
+  .movie-card__wrap {
+    padding: 24px 0 0 0;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .movie-card__title {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .movie-card__wrap {
+    padding: 13px 0 0 0;
+  }
+}

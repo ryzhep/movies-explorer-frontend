@@ -114,6 +114,7 @@
       z-index: 2;
       cursor: pointer;
       background-size: contain;
+      background: url(../../images/burger-open.svg) transparent no-repeat;
       border: none;
     }
   

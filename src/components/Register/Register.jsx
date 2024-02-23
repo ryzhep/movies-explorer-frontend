@@ -13,20 +13,20 @@ function Register() {
             Имя
           </span>
         </div>
-        <input className="form-auth__input" placeholder="Введите имя"/>
+        <input className="form-auth__input" placeholder="Введите имя" required/>
         <div className="form-auth__cell">
           <span htmlFor="email" className="form-auth__subtitle">
             E-mail
           </span>
           </div>
-          <input className="form-auth__input" placeholder="Введите Email"/>
+          <input className="form-auth__input" placeholder="Введите Email" required/>
 
         <div className="form-auth__cell">
           <span htmlFor="password" className="form-auth__subtitle">
             Пароль
           </span>
           </div>
-          <input className="form-auth__input" placeholder="Введите пароль"/>
+          <input className="form-auth__input" placeholder="Введите пароль" required/>
 
         <div className="form-auth__error-container">
           <button className="form-auth__button">Зарегистрироваться</button>

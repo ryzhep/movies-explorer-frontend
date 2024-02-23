@@ -12,6 +12,7 @@ function Profile() {
             name="name"
             minLength="2"
             maxLength="30"
+            required
           />
           <span className="profile__error-validate"></span>
         </div>
@@ -22,6 +23,7 @@ function Profile() {
             type="email"
             placeholder="Введите Ваш email"
             name="email"
+            required
           />
           <span className="profile__error-validate"></span>
         </div>

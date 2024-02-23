@@ -1,4 +1,3 @@
-import React from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import MoreMovies from "../Movies/MoreMovies/MoreMovies";
 import { useLocation } from "react-router-dom";

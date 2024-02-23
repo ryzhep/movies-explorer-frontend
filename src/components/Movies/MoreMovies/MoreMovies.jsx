@@ -1,5 +1,3 @@
-import React from 'react';
-
 function MoreMovies({ loadMore }) {
   return (
     <section className="more-movies">

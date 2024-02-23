@@ -1,4 +1,3 @@
-import React from 'react';
 import SearchForm from '../Movies/SearchForm/SerachForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 

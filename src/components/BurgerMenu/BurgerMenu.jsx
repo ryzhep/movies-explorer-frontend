@@ -1,4 +1,3 @@
-import React from 'react';
 import ProfileNav from '../ProfileNav/ProfileNav';
 import Navigation from '../Navigation/Navigation';
 

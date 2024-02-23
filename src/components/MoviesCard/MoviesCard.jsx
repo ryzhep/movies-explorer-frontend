@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Movies } from "../../utils/constans";
 import { useLocation } from "react-router-dom";
 

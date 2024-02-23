@@ -1,4 +1,3 @@
-import React from 'react';
 import FilterChechbox from './FilterCheckbox/FilterCheckbox';
 
 function SearchForm() {

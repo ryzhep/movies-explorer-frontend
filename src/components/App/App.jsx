@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, useNavigate} from 'react-router-dom';
 import "./App.css";
+import { mainApi } from '../../utils/MainApi';
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
@@ -10,10 +11,9 @@ import Profile from "../Profile/Profile";
 import Movies from '../Movies/Movies';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import SavedMovies from '../SavedMovies/SavedMovies';
-import { register, login } from '../../utils/auth';
+import { register, login, token } from '../../utils/auth';
 import { useLocation } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({ email: '', name: '' });
@@ -27,7 +27,9 @@ function App() {
 const handleLogin = ({ email, password }) => {
   login({ email, password })
     .then((data)=> {
+      console.log('token');
       localStorage.setItem('auth', true);
+      localStorage.setItem("jwt", token);
       setLoggedIn(true);
       navigate('/movies', { replace: true });
       setCurrentUser(data);
@@ -36,7 +38,30 @@ const handleLogin = ({ email, password }) => {
       console.log('йоу')
     });
 };
- 
+
+React.useEffect(() => {
+  const checkToken = jwt => {
+    token(jwt)
+      .then(res => {
+        if (res) {
+          setLoggedIn(true);
+          navigate('/profile', { replace: true });
+        }
+      })
+      .catch(() => {
+        console.log("Ошибка доступа");
+      });
+  };
+
+  const jwt = localStorage.getItem('jwt');
+  if (jwt) {
+    checkToken(jwt);
+  }
+}, []); 
+
+
+
+  
   // Регистрация пользователя
   const isRegisterUser = ({ name, email, password }) => {
     register({ name, email, password })
@@ -44,12 +69,25 @@ const handleLogin = ({ email, password }) => {
         return login({ email, password });
       })
       .then((data) => {
+        localStorage.setItem("jwt", data.token);
         localStorage.setItem('auth', true);
         navigate('/movies', { replace: true });
         setCurrentUser(data);
       })
       .finally(() => {
        console.log('fff')
+      });
+  };
+
+  // Редактирование данных пользователя
+  const handleEditProfile = newData => {
+    mainApi
+      .editUserInfo(newData)
+      .then(data => {
+        setCurrentUser(data.data);
+      })
+      .finally(() => {
+        console.log('редактирование не вышло')
       });
   };
 
@@ -62,7 +100,7 @@ const handleLogin = ({ email, password }) => {
         <Route path="/" element={<Main />} />
         <Route path="/signup" element={<Register isRegisterUser={isRegisterUser} />} />
         <Route path="/signin" element={<Login  onLogin={handleLogin}/>} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<Profile handleEditProfile={handleEditProfile} />} />
         <Route path="/movies" element={<Movies />} />
         <Route path="/saved-movies" element={<SavedMovies />} />
         <Route path="*" element={<PageNotFound />} />

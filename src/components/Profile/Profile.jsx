@@ -1,4 +1,29 @@
+import { useState, useContext, useEffect } from 'react';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+
 function Profile() {
+  const currentUser = useContext(CurrentUserContext);
+  const [formProfile, setFormProfile] = useState({
+    name: currentUser.name,
+    email: currentUser.email
+  });
+  // Сохранение имени и эл.почты
+  useEffect(() => {
+    setFormProfile({
+      name: currentUser.name,
+      email: currentUser.email
+    });
+  }, [currentUser]);
+
+  const handleChange = event => {
+    const { name, value } = event.target;
+
+    setFormProfile({
+      ...formProfile,
+      [name]: value
+    });
+  }
+
   return (
     <section className="profile">
       <p className="profile__title">Привет, Виталий!</p>
@@ -12,6 +37,8 @@ function Profile() {
             name="name"
             minLength="2"
             maxLength="30"
+            onChange={handleChange}
+            value={formProfile.name}
             required
           />
           <span className="profile__error-validate"></span>
@@ -23,6 +50,8 @@ function Profile() {
             type="email"
             placeholder="Введите Ваш email"
             name="email"
+            value={formProfile.email}
+            onChange={handleChange}
             required
           />
           <span className="profile__error-validate"></span>

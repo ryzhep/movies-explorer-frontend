@@ -18,13 +18,50 @@ class MainApi {
       return this._checkResponse(res);
     });
   }
-  //измнение данных профайла
+
+//измнение данных профайла
   editUserInfo(newName, newEmail) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({ name: newName, email: newEmail }),
     }).then((res) => {
+      return this._checkResponse(res);
+    });
+  }
+
+// удалить фильм
+deleteMovie(id) {
+    return fetch(`${this._baseUrl}/movies/${id}`, {
+      method: 'DELETE',
+      headers: this._headers,
+      credentials: 'include'
+    }).then(res => {
+      return this._checkResponse(res);
+    });
+  }
+
+// сохранить фильм
+  saveMovies(movie) {
+    return fetch(`${this._baseUrl}/movies`, {
+      method: 'POST',
+      headers: this._headers,
+      credentials: 'include',
+      body: JSON.stringify({
+        ...movie
+      })
+    }).then(res => {
+      return this._checkResponse(res);
+    });
+  }
+
+// показать сохраненные фильмы
+  getSavedMovies() {
+    return fetch(`${this._baseUrl}/movies`, {
+      method: 'GET',
+      headers: this._headers,
+      credentials: 'include'
+    }).then(res => {
       return this._checkResponse(res);
     });
   }

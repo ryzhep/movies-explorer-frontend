@@ -43,7 +43,6 @@ function Register({ isRegisterUser, setErrorServer, errorServer, disabled }) {
           <span htmlFor="name" className="form-auth__subtitle">
             Имя
           </span>
-        </div>
         <input
           className={`form-auth__input ${
             errors.name ? "form-auth__input_error" : "form-auth__input_valid"
@@ -58,11 +57,12 @@ function Register({ isRegisterUser, setErrorServer, errorServer, disabled }) {
           maxLength="200"
           onChange={handleChange}
         />
+        <span className="form-auth__error-validate">{errors.name}</span>
+        </div>
         <div className="form-auth__cell">
           <span htmlFor="email" className="form-auth__subtitle">
             E-mail
           </span>
-        </div>
         <input
           className={`form-auth__input ${
             errors.email ? "form-auth__input_error" : "form-auth__input_valid"
@@ -77,7 +77,8 @@ function Register({ isRegisterUser, setErrorServer, errorServer, disabled }) {
           required
           onChange={handleChange}
         />
-
+          <span className="form-auth__error-validate">{errors.email}</span>
+        </div>
         <div className="form-auth__cell">
           <span htmlFor="password" className="form-auth__subtitle">
             Пароль

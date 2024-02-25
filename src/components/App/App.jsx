@@ -21,6 +21,8 @@ function App() {
   const navigate = useNavigate();
   const auth = localStorage.getItem("auth");
   const [loggedIn, setLoggedIn] = React.useState(auth); // Пользователь авторизован
+  const [errorServer, setErrorServer] = React.useState(""); // Сообщение об ошибке на стороне бэка
+  const [disabled, setDisabled] = React.useState(false); // Неактивная кнопка
   // обрабатывает процесс аутентификации пользователя
   // сохраняет токен и данные в локальном хранилище
   // устанавливая флаги состояний и осуществляя переход
@@ -35,8 +37,16 @@ function App() {
         navigate("/movies", { replace: true });
         setCurrentUser(data);
       })
+      .catch((error) => {
+        if (error === 400) {
+          setErrorServer("При авторизации произошла ошибка");
+        } else if (error === 401) {
+          setErrorServer("Вы ввели неверный логин или пароль");
+        }
+        console.log(`Ошибка: ${error}`);
+      })
       .finally(() => {
-        console.log("йоу");
+        setDisabled(false);
       });
   };
 
@@ -61,6 +71,7 @@ function App() {
 
   // Регистрация пользователя
   const isRegisterUser = ({ name, email, password }) => {
+    setDisabled(true);
     register({ name, email, password })
       .then(() => {
         return login({ email, password });
@@ -68,11 +79,22 @@ function App() {
       .then((data) => {
         localStorage.setItem("jwt", data.token);
         localStorage.setItem("auth", true);
+        setLoggedIn(true);
         navigate("/movies", { replace: true });
         setCurrentUser(data);
       })
+      .catch((error) => {
+        if (error === 409) {
+          setErrorServer("Пользователь с таким email уже существует");
+        } else if (error === 400) {
+          setErrorServer("При регистрации пользователя произошла ошибка");
+        } else {
+          setErrorServer("На сервере произошла ошибка");
+        }
+        console.log(`Ошибка: ${error}`);
+      })
       .finally(() => {
-        console.log("fff");
+        setDisabled(false);
       });
   };
 
@@ -99,13 +121,29 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route
             path="/signup"
-            element={<Register isRegisterUser={isRegisterUser} />}
+            element={
+              <Register
+                isRegisterUser={isRegisterUser}
+                setErrorServer={setErrorServer}
+                errorServer={errorServer}
+              />
+            }
           />
-          <Route path="/signin" element={<Login onLogin={handleLogin} />} />
+          <Route
+            path="/signin"
+            element={
+              <Login
+                onLogin={handleLogin}
+                setErrorServer={setErrorServer}
+                disabled={disabled}
+              />
+            }
+          />
           <Route
             path="/profile"
             element={
               <ProtectedRouteElement
+                setErrorServer={setErrorServer}
                 loggedIn={loggedIn}
                 element={Profile}
                 handleEditProfile={handleEditProfile}
@@ -115,9 +153,7 @@ function App() {
           <Route
             path="/movies"
             element={
-              <ProtectedRouteElement 
-                loggedIn={loggedIn} 
-                element={Movies} />
+              <ProtectedRouteElement loggedIn={loggedIn} element={Movies} />
             }
           />
           <Route

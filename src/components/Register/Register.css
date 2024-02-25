@@ -173,7 +173,7 @@
     font-weight: 400;
     line-height: normal;
     position: absolute;
-    bottom: 0px;
+    bottom: 4px;
   }
   
   @media screen and (max-width: 768px) {

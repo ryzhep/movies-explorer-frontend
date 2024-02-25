@@ -1,37 +1,39 @@
 class MainApi {
-    constructor(options) {
-      this._baseUrl = options.baseUrl;
-      this._headers = options.headers;
+  constructor(options) {
+    this._baseUrl = options.baseUrl;
+    this._headers = options.headers;
+  }
+  _checkResponse(res) {
+    if (res.ok) {
+      return res.json();
     }
-    _checkResponse(res) {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(res.status);
-    }
-    getUserInfo() {
-        return fetch(`${this._baseUrl}/users/me`, {
-          headers: this._headers,
-        }).then(res => {
-          return this._checkResponse(res);
-        });
-      }
-    
-      editUserInfo(data) {
-        return fetch(`${this._baseUrl}/users/me`, {
-          method: 'PATCH',
-          headers: this._headers,
-          body: JSON.stringify({ name: data.name, email: data.email })
-        }).then(res => {
-          return this._checkResponse(res);
-        });
-      }
-    }
+    return Promise.reject(res.status);
+  }
 
-    export const mainApi = new MainApi({
-        baseUrl: 'https://api.ryzhep-movies.nomoredomainsmonster.ru',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-      });
+  //получаем данные профайла
+  getUserInfo() {
+    return fetch(`${this._baseUrl}/users/me`, {
+      headers: this._headers,
+    }).then((res) => {
+      return this._checkResponse(res);
+    });
+  }
+  //измнение данных профайла
+  editUserInfo(newName, newEmail) {
+    return fetch(`${this._baseUrl}/users/me`, {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({ name: newName, email: newEmail }),
+    }).then((res) => {
+      return this._checkResponse(res);
+    });
+  }
+}
+
+export const mainApi = new MainApi({
+  baseUrl: "https://api.ryzhep-movies.nomoredomainsmonster.ru",
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+});

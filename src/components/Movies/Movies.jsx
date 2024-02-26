@@ -6,13 +6,10 @@ import SearchForm from '../Movies/SearchForm/SerachForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
 
-const Movies = ({
-  saveMovies,
-  disabled,
-  handleDeleteMovie,
-  handleSaveMovies,
-}) => {
+const Movies = () => {
   const [movieDisplay, setMovieDisplay] = useState([]); // Фильмы на странице
+  //Mы обновляем состояние movieDisplay с помощью метода setMovieDisplay, который передает фильмы полученные из API.
+
   useEffect(() => {
     moviesApi.getMoviesAll()
       .then((movies) => {
@@ -28,11 +25,7 @@ const Movies = ({
     <section className="movies">
       <SearchForm/>
       <MoviesCardList
-            movies={movieDisplay}
-            disabled={disabled}
-            handleSaveMovies={handleSaveMovies}
-            handleDeleteMovie={handleDeleteMovie}
-            saveMovies={saveMovies}
+movies={movieDisplay}
           />
     </section>
   );

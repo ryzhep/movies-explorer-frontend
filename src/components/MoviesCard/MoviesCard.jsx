@@ -1,22 +1,17 @@
 import { useLocation } from "react-router-dom";
 import { Movie_URL } from "../../utils/constants";
 
-function MoviesCard({
-  movie,
-  disabled,
-  handleDeleteMovie,
-}) {
-
-
-  const handleDelete = () => {
-    handleDeleteMovie(movie);
-  };
-
+function MoviesCard({ movie }) {
   const location = useLocation();
 
   return (
     <article className="movie-card">
-      <a href={movie.trailerLink} className="movie-card__link" rel="noreferrer" target="_blank">
+      <a
+        href={movie.trailerLink}
+        className="movie-card__link"
+        rel="noreferrer"
+        target="_blank"
+      >
         <img
           name="image"
           className="movie-card__image"
@@ -24,19 +19,14 @@ function MoviesCard({
           alt={movie.nameRU}
         />
       </a>
-      {location.pathname === '/movies' && (
+      {location.pathname === "/movies" && (
         <button
           className={`movie-card__button-save  movie-card__button-save_active' : ''
           }`}
-          disabled={disabled}
         />
       )}
-      {location.pathname === '/saved-movies' && (
-        <button
-          className="movie-card__button-save movie-card__button-save_delete"
-          disabled={disabled}
-          onClick={handleDelete}
-        />
+      {location.pathname === "/saved-movies" && (
+        <button className="movie-card__button-save movie-card__button-save_delete" />
       )}
 
       <div className="movie-card__wrap">

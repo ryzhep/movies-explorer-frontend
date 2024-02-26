@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import "./App.css";
 import { mainApi } from "../../utils/MainApi";
+import { moviesApi } from "../../utils/MoviesApi";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
@@ -111,6 +112,20 @@ function App() {
   };
 
   const location = useLocation();
+
+ // Получение фильмов с сервера
+ React.useEffect(() => {
+  moviesApi.getMoviesAll()
+  .then((movies) => {
+    // Обработка полученных фильмов
+    console.log(movies);
+  })
+  .catch((error) => {
+    // Обработка ошибки
+    console.error('Произошла ошибка при загрузке фильмов:', error);
+  });
+}, [])
+  
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="pages">

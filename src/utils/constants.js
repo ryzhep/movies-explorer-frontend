@@ -77,3 +77,9 @@ export const Movies = [
   ];
 
   export const Movie_URL = "https://api.nomoreparties.co/";
+
+
+  export const filterShotCheckBox = (movies) => {
+    return movies.filter((movie) => movie.duration <= 40);
+  };
+  

@@ -1,6 +1,9 @@
-import FilterChechbox from './FilterCheckbox/FilterCheckbox';
+import FilterChechbox from "./FilterCheckbox/FilterCheckbox";
 
-function SearchForm() {
+function SearchForm({ isMoviesCheckbox, setIsMoviesCheckbox }) {
+  function handleCheckbox() {
+    setIsMoviesCheckbox(!isMoviesCheckbox);
+  }
 
   return (
     <form className="search-form" noValidate>
@@ -12,9 +15,12 @@ function SearchForm() {
           type="search"
         />
         <button className="search-form__button" type="submit" />
-       <span className="search-form__error"></span>
+        <span className="search-form__error"></span>
       </div>
-      <FilterChechbox/>
+      <FilterChechbox
+        handleCheckbox={handleCheckbox}
+        isMoviesCheckbox={isMoviesCheckbox}
+      />
     </form>
   );
 }

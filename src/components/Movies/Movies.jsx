@@ -2,11 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { moviesApi } from "../../utils/MoviesApi";
 import { filterShotCheckBox } from "../../utils/constants.js";
+import Preloader from '../Preloader/Preloader.js';
 
 import SearchForm from "../Movies/SearchForm/SerachForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 
-const Movies = () => {
+const Movies = ({preloader,movies}) => {
 
   const [movieDisplay, setMovieDisplay] = useState([]); // Фильмы на странице
   //Mы обновляем состояние movieDisplay с помощью метода setMovieDisplay, который передает фильмы полученные из API.
@@ -48,9 +49,19 @@ const Movies = () => {
         isMoviesCheckbox={isMoviesCheckbox}
         onChange={handleCheckbox}
       />
-      <MoviesCardList movies={filteredMovies} />
+      {
+  preloader ? (
+    <Preloader />
+    ) : filteredMovies.length === 0 && movies && movies.length > 0 ? (
+      <p className="movies__not-found">
+        </p>
+    ) : (
+      filteredMovies.length > 0 && (
+    <MoviesCardList movies={filteredMovies} preloader={preloader}/>
+    )
+    )}
     </section>
-  );
-};
 
+);
+};
 export default Movies;

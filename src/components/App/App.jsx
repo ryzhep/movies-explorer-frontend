@@ -24,6 +24,8 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(auth); // Пользователь авторизован
   const [errorServer, setErrorServer] = React.useState(""); // Сообщение об ошибке на стороне бэка
   const [disabled, setDisabled] = React.useState(false); // Неактивная кнопка
+  const [preloader, setPreloader] = React.useState(false); //прелоадер
+  const [movies, setMovies] = React.useState([]); // Стейт фильмов
   // обрабатывает процесс аутентификации пользователя
   // сохраняет токен и данные в локальном хранилище
   // устанавливая флаги состояний и осуществляя переход
@@ -115,6 +117,7 @@ function App() {
 
  // Получение фильмов с сервера
  React.useEffect(() => {
+    setPreloader(true);
   moviesApi.getMoviesAll()
   .then((movies) => {
     // Обработка полученных фильмов
@@ -125,6 +128,24 @@ function App() {
     console.error('Произошла ошибка при загрузке фильмов:', error);
   });
 }, [])
+
+React.useEffect(() => {
+  if ( movies.length === 0) {
+    setPreloader(true);
+    moviesApi
+      .getMoviesAll()
+      .then(movies => {
+        setMovies(movies);
+      })
+      .catch((error) => {
+        // Обработка ошибки
+        console.error('Произошла ошибка при загрузке фильмов:', error);
+      })
+      .finally(() => {
+        setPreloader(false);
+      });
+  }
+}, [ movies]);
   
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -168,7 +189,7 @@ function App() {
           <Route
             path="/movies"
             element={
-              <ProtectedRouteElement loggedIn={loggedIn} element={Movies} />
+              <ProtectedRouteElement loggedIn={loggedIn} element={Movies} preloader={preloader} />
             }
           />
           <Route

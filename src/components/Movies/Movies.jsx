@@ -7,7 +7,7 @@ import Preloader from '../Preloader/Preloader.js';
 import SearchForm from "../Movies/SearchForm/SerachForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 
-const Movies = ({preloader,movies}) => {
+const Movies = ({preloader,movies, isSearch, setSearch, errorFront, setErrorFront}) => {
 
   const [movieDisplay, setMovieDisplay] = useState([]); // Фильмы на странице
   //Mы обновляем состояние movieDisplay с помощью метода setMovieDisplay, который передает фильмы полученные из API.
@@ -45,6 +45,10 @@ const Movies = ({preloader,movies}) => {
   return (
     <section className="movies">
       <SearchForm
+        isSearch={isSearch}
+        setSearch={setSearch}
+        errorFront={errorFront}
+        setErrorFront={setErrorFront}
         setIsMoviesCheckbox={setIsMoviesCheckbox}
         isMoviesCheckbox={isMoviesCheckbox}
         onChange={handleCheckbox}

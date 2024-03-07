@@ -120,19 +120,32 @@ function App() {
   const location = useLocation();
 
   // Получение фильмов с сервера
-  React.useEffect(() => {
+// Получение фильмов с сервера
+React.useEffect(() => {
+  if (isSearch && movies.length === 0) {
     setPreloader(true);
     moviesApi
       .getMoviesAll()
-      .then((movies) => {
-        // Обработка полученных фильмов
-        console.log(movies);
+      .then(movies => {
+        setMovies(movies);
       })
-      .catch((error) => {
-        // Обработка ошибки
-        console.error("Произошла ошибка при загрузке фильмов:", error);
+      .catch(error => {
+        if (error === 401) {
+          setCurrentUser(null);
+          setLoggedIn(false);
+          localStorage.clear();
+          return;
+        }
+        setErrorServer(
+          'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
+        );
+        console.log(`Ошибка: ${error}`);
+      })
+      .finally(() => {
+        setPreloader(false);
       });
-  }, []);
+  }
+}, [isSearch, movies]);
 
   React.useEffect(() => {
     if (movies.length === 0) {
@@ -202,6 +215,7 @@ function App() {
                 setErrorFront={setErrorFront}
                 isSearch={isSearch}
                 setSearch={setSearch}
+                movies={movies}
               />
             }
           />

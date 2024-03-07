@@ -22,6 +22,7 @@ const Movies = ({
   ); //чекбокс
 
   const [errorMovies, setErrorMovies] = React.useState(""); // Результат поиска
+  const [moviesLine, setMoviesLine] = React.useState(0); // Фильмы в ряд
   // Фильмы полученные по поиску
   const [moviesSearch, setMoviesSearch] = React.useState([]);
   const [showShortMovies, setShowShortMovies] = React.useState([]);
@@ -57,7 +58,6 @@ const Movies = ({
 
   // Поиск по фильмам
   React.useEffect(() => {
-    
     if (movies.length > 0) {
       const newFilterMovies = filterAllMovies(isSearch, movies);
       if (newFilterMovies.length > 0) {
@@ -82,6 +82,29 @@ const Movies = ({
         ? 5
         : 0
     );
+   
+    setMoviesLine(
+      window.innerWidth >= 980 || window.innerWidth >= 768
+        ? 3
+        : window.innerWidth <= 767 || (window.innerWidth >= 320 && window.innerWidth <= 480)
+        ? 2
+        : 0
+    );
+  };
+
+  // Кнопка "Еще"
+  const loadMore = () => {
+    const firstLineFilms = movieDisplay.length;
+    const lastLineFilms = firstLineFilms + moviesLine;
+
+    let moreMovies = [];
+
+    if (isSearch && moviesSearch.length > 0) {
+      moreMovies = moviesSearch.slice(firstLineFilms, lastLineFilms);
+    } else {
+      moreMovies = movies.slice(firstLineFilms, lastLineFilms);
+    }
+    setMovieDisplay([...movieDisplay, ...moreMovies]);
   };
 
   React.useEffect(() => {
@@ -129,6 +152,7 @@ const Movies = ({
         isMoviesCheckbox={isMoviesCheckbox}
         onChange={handleCheckbox}
         isAllMoviesDisplayed={isAllMoviesDisplayed}
+        loadMore={loadMore}
       />
       {preloader ? (
         <Preloader />
@@ -136,7 +160,7 @@ const Movies = ({
         <p className="movies__not-found">{errorMovies}</p>
       ) : (
         filteredMovies.length > 0 && (
-          <MoviesCardList movies={filteredMovies} preloader={preloader} />
+          <MoviesCardList movies={filteredMovies} preloader={preloader}  loadMore={loadMore}/>
         )
       )}
     </section>

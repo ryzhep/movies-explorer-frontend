@@ -1,40 +1,35 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { moviesApi } from "../../utils/MoviesApi";
-import { filterShotCheckBox, filterAllMovies } from "../../utils/constants.js";
-import Preloader from "../Preloader/Preloader.js";
-
-import SearchForm from "../Movies/SearchForm/SerachForm";
-import MoviesCardList from "../MoviesCardList/MoviesCardList";
+import React from 'react';
+import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import SearchForm from '../Movies/SearchForm/SerachForm';
+import Preloader from '../Preloader/Preloader';
+import { filterShotCheckBox, filterAllMovies } from '../../utils/constants';
 
 const Movies = ({
-  preloader,
   movies,
+  saveMovies,
+  preloader,
+  errorServer,
   isSearch,
   setSearch,
-  errorFront,
-  setErrorFront,
-  saveMovies,
-  handleSaveMovies,
   disabled,
-  errorServer,
   handleDeleteMovie,
+  handleSaveMovies,
+  errorFront,
+  setErrorFront
 }) => {
-  const [movieDisplay, setMovieDisplay] = useState([]); // Фильмы на странице
-  //Mы обновляем состояние movieDisplay с помощью метода setMovieDisplay, который передает фильмы полученные из API.
+  const [movieDisplay, setMovieDisplay] = React.useState([]); // Фильмы на странице
+  const [errorMovies, setErrorMovies] = React.useState(''); // Результат поиска
   const [isMoviesCheckbox, setIsMoviesCheckbox] = React.useState(
-    () => JSON.parse(localStorage.getItem("isShortMovies")) === true
-  ); //чекбокс
-
-  const [errorMovies, setErrorMovies] = React.useState(""); // Результат поиска
+    () => JSON.parse(localStorage.getItem('isShortMovies')) || false
+  ); // Чекбокс
+  const [showShortMovies, setShowShortMovies] = React.useState([]); // Стейт короткометражек
   const [moviesLine, setMoviesLine] = React.useState(0); // Фильмы в ряд
-  const [showShortMovies, setShowShortMovies] = React.useState([]);
   const [showMovies, setShowMovies] = React.useState(0); // Первое отображение карточек фильмов
 
-    // Данные в строке поиска полученные из локального хранилища
-    const savedIsSearch = JSON.parse(localStorage.getItem('isSearch'));
+  // Данные в строке поиска полученные из локального хранилища
+  const savedIsSearch = JSON.parse(localStorage.getItem('isSearch'));
 
-     // Найденные фильмы полученные из локального хранилища
+  // Найденные фильмы полученные из локального хранилища
   const savedMoviesSearch = JSON.parse(localStorage.getItem('moviesSearch'));
 
   // Фильмы полученные по поиску
@@ -42,39 +37,9 @@ const Movies = ({
     savedMoviesSearch ? savedMoviesSearch : []
   );
 
-
-  // переключение чекбокса
-  function handleCheckbox() {
-    setIsMoviesCheckbox(!isMoviesCheckbox);
-  }
   // Отображение всех фильмов
   const isAllMoviesDisplayed =
-    moviesSearch.length === movieDisplay.length ||
-    showShortMovies.length === movieDisplay.length;
-
-  // Отслеживание изменений чекбокса и сохранение в локальное хранилище
-  React.useEffect(() => {
-    localStorage.setItem("isShortMovies", JSON.stringify(isMoviesCheckbox));
-  }, [isMoviesCheckbox]);
-
-    // Отслеживание изменений в строке поиска и найденных фильмов, сохранение в localStorage
-    React.useEffect(() => {
-      localStorage.setItem('moviesSearch', JSON.stringify(moviesSearch));
-      localStorage.setItem('isSearch', JSON.stringify(isSearch));
-    }, [moviesSearch, isSearch]);
-
-  // запрос к апи
-  useEffect(() => {
-    moviesApi
-      .getMoviesAll()
-      .then((movies) => {
-        setMovieDisplay(movies); // Обновление состояния с полученными фильмами
-      })
-      .catch((error) => {
-        console.error("Произошла ошибка при загрузке фильмов:", error);
-      });
-  }, []);
-
+    moviesSearch.length === movieDisplay.length || showShortMovies.length === movieDisplay.length;
 
   // Поиск по фильмам
   React.useEffect(() => {
@@ -84,10 +49,21 @@ const Movies = ({
         setMoviesSearch(newFilterMovies);
       } else if (isSearch && newFilterMovies.length === 0) {
         setMoviesSearch([]);
-        setErrorMovies("Ничего не найдено");
+        setErrorMovies('Ничего не найдено');
       }
     }
   }, [isSearch, movies]);
+
+  // Отслеживание изменений чекбокса и сохранение в локальное хранилище
+  React.useEffect(() => {
+    localStorage.setItem('isShortMovies', JSON.stringify(isMoviesCheckbox));
+  }, [isMoviesCheckbox]);
+
+  // Отслеживание изменений в строке поиска и найденных фильмов, сохранение в localStorage
+  React.useEffect(() => {
+    localStorage.setItem('moviesSearch', JSON.stringify(moviesSearch));
+    localStorage.setItem('isSearch', JSON.stringify(isSearch));
+  }, [moviesSearch, isSearch]);
 
   // Проверка наличия данных в локальном хранилище
   React.useEffect(() => {
@@ -116,8 +92,7 @@ const Movies = ({
     setMoviesLine(
       window.innerWidth >= 980 || window.innerWidth >= 768
         ? 3
-        : window.innerWidth <= 767 ||
-          (window.innerWidth >= 320 && window.innerWidth <= 480)
+        : window.innerWidth <= 767 || (window.innerWidth >= 320 && window.innerWidth <= 480)
         ? 2
         : 0
     );
@@ -138,8 +113,9 @@ const Movies = ({
     setMovieDisplay([...movieDisplay, ...moreMovies]);
   };
 
+  let resizeTimer;
+
   React.useEffect(() => {
-    let resizeTimer;
     // Обработка изменения размера окна
     const handleScreenSizeWithTimeout = () => {
       clearTimeout(resizeTimer);
@@ -164,9 +140,9 @@ const Movies = ({
       setMovieDisplay(displayedMoviesSlice);
     }
 
-    window.addEventListener("resize", handleScreenSizeWithTimeout);
+    window.addEventListener('resize', handleScreenSizeWithTimeout);
     return () => {
-      window.removeEventListener("resize", handleScreenSizeWithTimeout);
+      window.removeEventListener('resize', handleScreenSizeWithTimeout);
     };
   }, [showMovies, moviesSearch, movies, isSearch, isMoviesCheckbox]);
 
@@ -179,29 +155,26 @@ const Movies = ({
         setErrorFront={setErrorFront}
         setIsMoviesCheckbox={setIsMoviesCheckbox}
         isMoviesCheckbox={isMoviesCheckbox}
-        onChange={handleCheckbox}
-        isAllMoviesDisplayed={isAllMoviesDisplayed}
-        loadMore={loadMore}
       />
       {preloader ? (
         <Preloader />
-      ) : movieDisplay.length === 0 && movies && movies.length > 0 ? (
+      ) : movieDisplay.length === 0 && movies.length > 0 ? (
         <p className="movies__not-found">{errorServer ? errorServer : errorMovies}</p>
       ) : (
         movieDisplay.length > 0 && (
           <MoviesCardList
             movies={movieDisplay}
-            preloader={preloader}
-            loadMore={loadMore}
-            saveMovies={saveMovies}
-            handleSaveMovies={handleSaveMovies}
-            disabled={disabled}
-            handleDeleteMovie={handleDeleteMovie}
             isAllMoviesDisplayed={isAllMoviesDisplayed}
+            loadMore={loadMore}
+            disabled={disabled}
+            handleSaveMovies={handleSaveMovies}
+            handleDeleteMovie={handleDeleteMovie}
+            saveMovies={saveMovies}
           />
         )
       )}
     </section>
   );
 };
+
 export default Movies;

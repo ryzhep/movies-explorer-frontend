@@ -38,6 +38,7 @@ function App() {
   const [tooltip, setTooltip] = React.useState({ message: '' }); // Сообщение в модальном окне
 
   // Получение фильмов с сервера
+// Получение фильмов с сервера
 React.useEffect(() => {
   if (isSearch && movies.length === 0) {
     setPreloader(true);
@@ -140,6 +141,7 @@ React.useEffect(() => {
         setInfoTooltipOpen(true);
         setTooltip({ message: 'Вы успешно зарегистрировались!' });
         localStorage.setItem('auth', true);
+        localStorage.setItem("jwt", data.token);
         setLoggedIn(true);
         navigate('/movies', { replace: true });
         setCurrentUser(data);
@@ -221,13 +223,16 @@ React.useEffect(() => {
           localStorage.clear();
           return;
         }
+        setInfoTooltipOpen(true);
         setErrorServer('Ошибка при сохранении фильма');
+        setTooltip({ message: `${errorServer}` });
         console.log(`Ошибка: ${error}`);
       })
       .finally(() => {
         setDisabled(false);
       });
   }
+
   // Закрытие попапа с сообщением
   const closeAllPopups = () => {
     setInfoTooltipOpen(false);
@@ -300,17 +305,18 @@ React.useEffect(() => {
             path="/profile"
             element={
               <ProtectedRouteElement
-                setErrorServer={setErrorServer}
-                loggedIn={loggedIn}
-                element={Profile}
-                editInputProfileActive={editInputProfileActive}
-                handleEditProfile={handleEditProfile}
-                disabled={disabled}
-                errorServer={errorServer}
-                setEditInputProfileActive={setEditInputProfileActive}
-                setInputProfileChanges={setInputProfileChanges}
-                isInputProfileChanges={isInputProfileChanges}
-                setErrorFront={setErrorFront}
+              loggedIn={loggedIn}
+              element={Profile}
+              handleEditProfile={handleEditProfile}
+              editInputProfileActive={editInputProfileActive}
+              setEditInputProfileActive={setEditInputProfileActive}
+              setInputProfileChanges={setInputProfileChanges}
+              isInputProfileChanges={isInputProfileChanges}
+              disabled={disabled}
+              setErrorServer={setErrorServer}
+              errorServer={errorServer}
+              errorFront={errorFront}
+              setErrorFront={setErrorFront}
               />
             }
           />
@@ -321,6 +327,8 @@ React.useEffect(() => {
                 loggedIn={loggedIn}
                 element={Movies}
                 preloader={preloader}
+                errorServer={errorServer}
+                setErrorServer={setErrorServer}
                 errorFront={errorFront}
                 setErrorFront={setErrorFront}
                 isSearch={isSearch}

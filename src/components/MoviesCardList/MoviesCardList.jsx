@@ -1,22 +1,22 @@
-import { useLocation } from "react-router-dom";
-import MoreMovies from "../../components/Movies/MoreMovies/MoreMovies";
-import MoviesCard from "../MoviesCard/MoviesCard";
+import { useLocation } from 'react-router-dom';
+import MoreMovies from '../Movies/MoreMovies/MoreMovies';
+import MoviesCard from '../MoviesCard/MoviesCard';
 
 function MoviesCardList({
   movies,
+  isAllMoviesDisplayed,
   loadMore,
   saveMovies,
-  handleSaveMovies,
   disabled,
-  handleDeleteMovie,
-  isAllMoviesDisplayed
+  handleSaveMovies,
+  handleDeleteMovie
 }) {
   const location = useLocation();
   return (
     <section className="movies-card-list">
       <div className="movies-card-list__container">
-        {location.pathname === "/movies"
-          ? movies.map((movie) => (
+        {location.pathname === '/movies'
+          ? movies.map(movie => (
               <MoviesCard
                 key={movie.id}
                 movie={movie}
@@ -26,7 +26,7 @@ function MoviesCardList({
                 handleDeleteMovie={handleDeleteMovie}
               />
             ))
-          : saveMovies.map((movie) => (
+          : saveMovies.map(movie => (
               <MoviesCard
                 key={movie._id}
                 movie={movie}

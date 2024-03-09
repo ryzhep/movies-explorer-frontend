@@ -49,20 +49,22 @@ deleteMovie(id) {
   }
  
 // сохранить фильм
-  saveMovies(movie) {
-    const token = localStorage.getItem('jwt');
-    return fetch(`${this._baseUrl}/movies`, {
-      method: 'POST',
-      headers: {  Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-      credentials: 'include',
-      body: JSON.stringify({
-        ...movie
-      })
-    });
-  }
+saveMovies(movie) {
+  const token = localStorage.getItem('jwt');
+  return fetch(`${this._baseUrl}/movies`, {
+    method: 'POST',
+    headers: {  Accept: 'application/json',
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`},
+    credentials: 'include',
+    body: JSON.stringify({
+      ...movie
+    })
+  }).then(res => {
+    return this._checkResponse(res);
+  });
+}
+
   
 // показать сохраненные фильмы
 getSavedMovies() {

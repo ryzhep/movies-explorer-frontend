@@ -16,6 +16,7 @@ import { register, login, token } from "../../utils/auth";
 import { useLocation } from "react-router-dom";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import ProtectedRouteElement from "../ProtectedRouteElement/ProtectedRouteElement";
+import { Movie_URL } from '../../utils/constants';
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({ email: "", name: "" });
@@ -28,7 +29,7 @@ function App() {
   const [movies, setMovies] = React.useState([]); // Стейт фильмов
   const [errorFront, setErrorFront] = React.useState(""); // Сообщение об ошибке на стороне пользователя
   const [isSearch, setSearch] = React.useState(''); // Значение в поисковой строке
-
+  const [saveMovies, setSaveMovies] = React.useState([]); // Стейт сохраненных фильмов
 
   // обрабатывает процесс аутентификации пользователя
   // сохраняет токен и данные в локальном хранилище
@@ -165,6 +166,63 @@ React.useEffect(() => {
     }
   }, [movies]);
 
+  // Получение данных пользователя и сохраненных фильмов
+  React.useEffect(() => {
+    loggedIn &&
+      Promise.all([mainApi.getUserInfo(), mainApi.getSavedMovies()])
+        .then(([user, saveMovies]) => {
+          setCurrentUser(user);
+          setSaveMovies(saveMovies);
+          setLoggedIn(true);
+        })
+        .catch(error => {
+          if (error === 401) {
+            setLoggedIn(false);
+            setCurrentUser(null);
+            localStorage.clear();
+            return;
+          }
+          console.log(`Ошибка: ${error}`);
+        });
+  }, [loggedIn]);
+
+   // Добавление фильма в раздел "сохраненные фильмы"
+   function handleSaveMovies(movie) {
+    const movieData = {
+      country: movie.country,
+      director: movie.director,
+      duration: movie.duration,
+      year: movie.year,
+      description: movie.description,
+      image: `${Movie_URL}${movie.image.url}`,
+      trailerLink: movie.trailerLink,
+      nameRU: movie.nameRU,
+      nameEN: movie.nameEN,
+      thumbnail: `${Movie_URL}${movie.image.url}`,
+      movieId: movie.id
+    };
+    setDisabled(true);
+    mainApi
+      .saveMovies(movieData)
+      .then(saveMovies => {
+        setSaveMovies(prev => [...prev, saveMovies]);
+      })
+      .catch(error => {
+        if (error === 401) {
+          setCurrentUser(null);
+          setLoggedIn(false);
+          localStorage.clear();
+          return;
+        }
+        setErrorServer('Ошибка при сохранении фильма');
+        console.log(`Ошибка: ${error}`);
+      })
+      .finally(() => {
+        setDisabled(false);
+      });
+  }
+
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="pages">
@@ -180,6 +238,7 @@ React.useEffect(() => {
                 isRegisterUser={isRegisterUser}
                 setErrorServer={setErrorServer}
                 errorServer={errorServer}
+                disabled={disabled}
               />
             }
           />
@@ -190,6 +249,7 @@ React.useEffect(() => {
                 onLogin={handleLogin}
                 setErrorServer={setErrorServer}
                 disabled={disabled}
+                errorServer={errorServer}
               />
             }
           />
@@ -201,6 +261,7 @@ React.useEffect(() => {
                 loggedIn={loggedIn}
                 element={Profile}
                 handleEditProfile={handleEditProfile}
+                disabled={disabled}
               />
             }
           />
@@ -215,7 +276,11 @@ React.useEffect(() => {
                 setErrorFront={setErrorFront}
                 isSearch={isSearch}
                 setSearch={setSearch}
+                disabled={disabled}
                 movies={movies}
+                saveMovies={saveMovies}
+                setSaveMovies={setSaveMovies}
+                handleSaveMovies={handleSaveMovies}
               />
             }
           />
@@ -225,6 +290,14 @@ React.useEffect(() => {
               <ProtectedRouteElement
                 loggedIn={loggedIn}
                 element={SavedMovies}
+                saveMovies={saveMovies}
+                setSaveMovies={setSaveMovies}
+                handleSaveMovies={handleSaveMovies}
+                isSearch={isSearch}
+                disabled={disabled}
+                setSearch={setSearch}
+                errorFront={errorFront}
+                setErrorFront={setErrorFront}
               />
             }
           />

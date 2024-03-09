@@ -1,8 +1,16 @@
 import { useLocation } from "react-router-dom";
 import { Movie_URL } from "../../utils/constants";
 
-function MoviesCard({ movie }) {
+function MoviesCard({ movie, saveMovies, handleSaveMovies, disabled }) {
   const location = useLocation();
+
+  const saveMovieBtn = saveMovies.some(saveMovies => saveMovies.movieId === movie.id);
+
+  const handleSavedMovieBtn = () => {
+    if (!saveMovieBtn) {
+      return handleSaveMovies(movie);
+    }
+  };
 
   return (
     <article className="movie-card">
@@ -23,10 +31,13 @@ function MoviesCard({ movie }) {
         <button
           className={`movie-card__button-save  movie-card__button-save_active' : ''
           }`}
+          onClick={handleSavedMovieBtn}
+          disabled={disabled}
         />
       )}
       {location.pathname === "/saved-movies" && (
-        <button className="movie-card__button-save movie-card__button-save_delete" />
+        <button className="movie-card__button-save movie-card__button-save_delete" 
+        disabled={disabled} />
       )}
 
       <div className="movie-card__wrap">

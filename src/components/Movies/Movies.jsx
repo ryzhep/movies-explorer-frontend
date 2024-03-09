@@ -14,6 +14,9 @@ const Movies = ({
   setSearch,
   errorFront,
   setErrorFront,
+  saveMovies,
+  handleSaveMovies,
+  disabled,
 }) => {
   const [movieDisplay, setMovieDisplay] = useState([]); // Фильмы на странице
   //Mы обновляем состояние movieDisplay с помощью метода setMovieDisplay, который передает фильмы полученные из API.
@@ -23,22 +26,39 @@ const Movies = ({
 
   const [errorMovies, setErrorMovies] = React.useState(""); // Результат поиска
   const [moviesLine, setMoviesLine] = React.useState(0); // Фильмы в ряд
-  // Фильмы полученные по поиску
-  const [moviesSearch, setMoviesSearch] = React.useState([]);
   const [showShortMovies, setShowShortMovies] = React.useState([]);
   const [showMovies, setShowMovies] = React.useState(0); // Первое отображение карточек фильмов
+
+    // Данные в строке поиска полученные из локального хранилища
+    const savedIsSearch = JSON.parse(localStorage.getItem('isSearch'));
+
+     // Найденные фильмы полученные из локального хранилища
+  const savedMoviesSearch = JSON.parse(localStorage.getItem('moviesSearch'));
+  // Фильмы полученные по поиску
+  const [moviesSearch, setMoviesSearch] = React.useState(
+    savedMoviesSearch ? savedMoviesSearch : []
+  );
+
+
   // переключение чекбокса
   function handleCheckbox() {
     setIsMoviesCheckbox(!isMoviesCheckbox);
   }
- // Отображение всех фильмов
- const isAllMoviesDisplayed =
- moviesSearch.length === movieDisplay.length || showShortMovies.length === movieDisplay.length;
+  // Отображение всех фильмов
+  const isAllMoviesDisplayed =
+    moviesSearch.length === movieDisplay.length ||
+    showShortMovies.length === movieDisplay.length;
 
   // Отслеживание изменений чекбокса и сохранение в локальное хранилище
   React.useEffect(() => {
     localStorage.setItem("isShortMovies", JSON.stringify(isMoviesCheckbox));
   }, [isMoviesCheckbox]);
+
+    // Отслеживание изменений в строке поиска и найденных фильмов, сохранение в localStorage
+    React.useEffect(() => {
+      localStorage.setItem('moviesSearch', JSON.stringify(moviesSearch));
+      localStorage.setItem('isSearch', JSON.stringify(isSearch));
+    }, [moviesSearch, isSearch]);
 
   // запрос к апи
   useEffect(() => {
@@ -69,6 +89,16 @@ const Movies = ({
     }
   }, [isSearch, movies]);
 
+  // Проверка наличия данных в локальном хранилище
+  React.useEffect(() => {
+    if (savedMoviesSearch) {
+      setSearch(savedIsSearch);
+      setMoviesSearch(savedMoviesSearch);
+    } else {
+      return;
+    }
+  }, []);
+
   // Отображение карточек при разном разрешении экрана
   const handleScreenSize = () => {
     setShowMovies(
@@ -82,11 +112,12 @@ const Movies = ({
         ? 5
         : 0
     );
-   
+
     setMoviesLine(
       window.innerWidth >= 980 || window.innerWidth >= 768
         ? 3
-        : window.innerWidth <= 767 || (window.innerWidth >= 320 && window.innerWidth <= 480)
+        : window.innerWidth <= 767 ||
+          (window.innerWidth >= 320 && window.innerWidth <= 480)
         ? 2
         : 0
     );
@@ -133,12 +164,11 @@ const Movies = ({
       setMovieDisplay(displayedMoviesSlice);
     }
 
-    window.addEventListener('resize', handleScreenSizeWithTimeout);
+    window.addEventListener("resize", handleScreenSizeWithTimeout);
     return () => {
-      window.removeEventListener('resize', handleScreenSizeWithTimeout);
+      window.removeEventListener("resize", handleScreenSizeWithTimeout);
     };
   }, [showMovies, moviesSearch, movies, isSearch, isMoviesCheckbox]);
-
 
   console.log(filteredMovies);
   return (
@@ -160,7 +190,14 @@ const Movies = ({
         <p className="movies__not-found">{errorMovies}</p>
       ) : (
         filteredMovies.length > 0 && (
-          <MoviesCardList movies={filteredMovies} preloader={preloader}  loadMore={loadMore}/>
+          <MoviesCardList
+            movies={filteredMovies}
+            preloader={preloader}
+            loadMore={loadMore}
+            saveMovies={saveMovies}
+            handleSaveMovies={handleSaveMovies}
+            disabled={disabled}
+          />
         )
       )}
     </section>

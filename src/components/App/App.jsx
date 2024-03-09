@@ -37,9 +37,55 @@ function App() {
   const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false); // Модальное окно с попапом
   const [tooltip, setTooltip] = React.useState({ message: '' }); // Сообщение в модальном окне
 
-  // обрабатывает процесс аутентификации пользователя
-  // сохраняет токен и данные в локальном хранилище
-  // устанавливая флаги состояний и осуществляя переход
+  // Получение фильмов с сервера
+React.useEffect(() => {
+  if (isSearch && movies.length === 0) {
+    setPreloader(true);
+    moviesApi
+      .getMoviesAll()
+      .then(movies => {
+        setMovies(movies);
+      })
+      .catch(error => {
+        if (error === 401) {
+          setCurrentUser(null);
+          setLoggedIn(false);
+          localStorage.clear();
+          return;
+        }
+        setInfoTooltipOpen(true);
+        setErrorServer(
+          'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
+        );
+        setTooltip({ message: `${errorServer}` });
+        console.log(`Ошибка: ${error}`);
+      })
+      .finally(() => {
+        setPreloader(false);
+      });
+  }
+}, [isSearch, movies]);
+
+  // Получение данных пользователя и сохраненных фильмов
+  React.useEffect(() => {
+    loggedIn &&
+      Promise.all([mainApi.getUserInfo(), mainApi.getSavedMovies()])
+        .then(([user, saveMovies]) => {
+          setCurrentUser(user);
+          setSaveMovies(saveMovies);
+          setLoggedIn(true);
+        })
+        .catch(error => {
+          if (error === 401) {
+            setLoggedIn(false);
+            setCurrentUser(null);
+            localStorage.clear();
+            return;
+          }
+          console.log(`Ошибка: ${error}`);
+        });
+  }, [loggedIn]);
+
   // Авторизация пользователя
   const handleLogin = ({ email, password }) => {
     setDisabled(true);
@@ -139,35 +185,6 @@ function App() {
 
   const location = useLocation();
 
-  // Получение фильмов с сервера
-// Получение фильмов с сервера
-React.useEffect(() => {
-  if (isSearch && movies.length === 0) {
-    setPreloader(true);
-    moviesApi
-      .getMoviesAll()
-      .then(movies => {
-        setMovies(movies);
-      })
-      .catch(error => {
-        if (error === 401) {
-          setCurrentUser(null);
-          setLoggedIn(false);
-          localStorage.clear();
-          return;
-        }
-        setInfoTooltipOpen(true);
-        setErrorServer(
-          'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
-        );
-        setTooltip({ message: `${errorServer}` });
-        console.log(`Ошибка: ${error}`);
-      })
-      .finally(() => {
-        setPreloader(false);
-      });
-  }
-}, [isSearch, movies]);
 
 React.useEffect(() => {
   const jwt = localStorage.getItem('jwt');
@@ -175,26 +192,7 @@ React.useEffect(() => {
     mainApi.getUserInfo(jwt);
   }
 }, []);
-  // Получение данных пользователя и сохраненных фильмов
-  React.useEffect(() => {
-    loggedIn &&
-      Promise.all([mainApi.getUserInfo(), mainApi.getSavedMovies()])
-        .then(([user, saveMovies]) => {
-          setCurrentUser(user);
-          setSaveMovies(saveMovies);
-          setLoggedIn(true);
-        })
-        .catch(error => {
-          if (error === 401) {
-            setLoggedIn(false);
-            setCurrentUser(null);
-            localStorage.clear();
-            return;
-          }
-          console.log(`Ошибка: ${error}`);
-        });
-  }, [loggedIn]);
-
+  
    // Добавление фильма в раздел "сохраненные фильмы"
    function handleSaveMovies(movie) {
     const movieData = {
@@ -234,6 +232,33 @@ React.useEffect(() => {
   const closeAllPopups = () => {
     setInfoTooltipOpen(false);
   };
+
+  // Удаление фильма из раздела "сохраненные фильмы"
+  function handleDeleteMovie(movie) {
+    const movieId = saveMovies.find(saveMovie => saveMovie.movieId === movie.id);
+    setDisabled(true);
+
+    mainApi
+      .deleteMovie(movie._id || movieId._id)
+      .then(res => {
+        setSaveMovies(presSavedMovies =>
+          presSavedMovies.filter(saveMovie => saveMovie._id !== res._id)
+        );
+      })
+      .catch(error => {
+        if (error === 401) {
+          setCurrentUser(null);
+          setLoggedIn(false);
+          localStorage.clear();
+          return;
+        }
+        console.log(`Ошибка: ${error}`);
+      })
+      .finally(() => {
+        setDisabled(false);
+      });
+  }
+
   // Сброс ошибок
   React.useEffect(() => {
     setErrorServer('');
@@ -305,6 +330,7 @@ React.useEffect(() => {
                 saveMovies={saveMovies}
                 setSaveMovies={setSaveMovies}
                 handleSaveMovies={handleSaveMovies}
+                handleDeleteMovie={handleDeleteMovie}
               />
             }
           />
@@ -322,6 +348,7 @@ React.useEffect(() => {
                 setSearch={setSearch}
                 errorFront={errorFront}
                 setErrorFront={setErrorFront}
+                handleDeleteMovie={handleDeleteMovie}
               />
             }
           />

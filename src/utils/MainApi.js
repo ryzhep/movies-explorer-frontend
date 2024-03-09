@@ -11,21 +11,27 @@ class MainApi {
   }
 
   //получаем данные профайла
-  getUserInfo(token) {
+  getUserInfo() {
+    const token = localStorage.getItem('jwt');
     return fetch(`${this._baseUrl}/users/me`, {
       headers:{
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,
+      credentials: 'include'
       }
     });
   }
 
 //измнение данных профайла
-  editUserInfo(newName, newEmail) {
+  editUserInfo(data) {
+    const token = localStorage.getItem('jwt');
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
-      body: JSON.stringify({ name: newName, email: newEmail }),
+      headers: {  Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+      body: JSON.stringify({ name: data.name, email: data.email }),
     }).then((res) => {
       return this._checkResponse(res);
     });
@@ -41,31 +47,34 @@ deleteMovie(id) {
       return this._checkResponse(res);
     });
   }
-
+ 
 // сохранить фильм
   saveMovies(movie) {
+    const token = localStorage.getItem('jwt');
     return fetch(`${this._baseUrl}/movies`, {
       method: 'POST',
-      headers: this._headers,
+      headers: {  Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
       credentials: 'include',
       body: JSON.stringify({
         ...movie
       })
-    }).then(res => {
-      return this._checkResponse(res);
     });
   }
-
+  
 // показать сохраненные фильмы
-  getSavedMovies() {
-    return fetch(`${this._baseUrl}/movies`, {
-      method: 'GET',
-      headers: this._headers,
-      credentials: 'include'
-    }).then(res => {
-      return this._checkResponse(res);
-    });
-  }
+getSavedMovies() {
+  const token = localStorage.getItem('jwt');
+  return fetch(`${this._baseUrl}/movies`, {
+    headers:{
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`,
+    credentials: 'include'
+    }
+  });
+}
 }
 
 export const mainApi = new MainApi({
@@ -74,4 +83,5 @@ export const mainApi = new MainApi({
     Accept: "application/json",
     "Content-Type": "application/json",
   },
+  credentials: 'include'
 });

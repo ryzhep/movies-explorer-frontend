@@ -1,15 +1,29 @@
 import { useLocation } from "react-router-dom";
 import { Movie_URL } from "../../utils/constants";
 
-function MoviesCard({ movie, saveMovies, handleSaveMovies, disabled }) {
+function MoviesCard({
+  movie,
+  saveMovies,
+  handleSaveMovies,
+  disabled,
+  handleDeleteMovie,
+}) {
   const location = useLocation();
 
-  const saveMovieBtn = saveMovies.some(saveMovies => saveMovies.movieId === movie.id);
+  const saveMovieBtn = Array.isArray(saveMovies) && saveMovies.some(
+    (savedMovie) => savedMovie.movieId === movie.id
+  );
+
 
   const handleSavedMovieBtn = () => {
     if (!saveMovieBtn) {
       return handleSaveMovies(movie);
     }
+    return handleDelete(movie);
+  };
+
+  const handleDelete = () => {
+    handleDeleteMovie(movie);
   };
 
   return (
@@ -29,15 +43,19 @@ function MoviesCard({ movie, saveMovies, handleSaveMovies, disabled }) {
       </a>
       {location.pathname === "/movies" && (
         <button
-          className={`movie-card__button-save  movie-card__button-save_active' : ''
+          className={`movie-card__button-save ${
+            saveMovieBtn ? "movie-card__button-save_active" : ""
           }`}
-          onClick={handleSavedMovieBtn}
           disabled={disabled}
+          onClick={handleSavedMovieBtn}
         />
       )}
       {location.pathname === "/saved-movies" && (
-        <button className="movie-card__button-save movie-card__button-save_delete" 
-        disabled={disabled} />
+        <button
+          className="movie-card__button-save movie-card__button-save_delete"
+          disabled={disabled}
+          onClick={handleDelete}
+        />
       )}
 
       <div className="movie-card__wrap">

@@ -8,6 +8,8 @@ function MoviesCardList({
   saveMovies,
   handleSaveMovies,
   disabled,
+  handleDeleteMovie,
+  isAllMoviesDisplayed
 }) {
   const location = useLocation();
   return (
@@ -21,6 +23,7 @@ function MoviesCardList({
                 saveMovies={saveMovies}
                 handleSaveMovies={handleSaveMovies}
                 disabled={disabled}
+                handleDeleteMovie={handleDeleteMovie}
               />
             ))
           : saveMovies.map((movie) => (
@@ -30,12 +33,13 @@ function MoviesCardList({
                 saveMovies={saveMovies}
                 handleSaveMovies={handleSaveMovies}
                 disabled={disabled}
+                handleDeleteMovie={handleDeleteMovie}
               />
             ))}
       </div>
-      {location.pathname === "/movies"
-        ?  <MoreMovies loadMore={loadMore} />
-        : ""}
+      {location.pathname === '/movies'
+        ? !isAllMoviesDisplayed && <MoreMovies loadMore={loadMore} />
+        : ''}
     </section>
   );
 }

@@ -18,6 +18,7 @@ const Movies = ({
   handleSaveMovies,
   disabled,
   errorServer,
+  handleDeleteMovie,
 }) => {
   const [movieDisplay, setMovieDisplay] = useState([]); // Фильмы на странице
   //Mы обновляем состояние movieDisplay с помощью метода setMovieDisplay, который передает фильмы полученные из API.
@@ -35,6 +36,7 @@ const Movies = ({
 
      // Найденные фильмы полученные из локального хранилища
   const savedMoviesSearch = JSON.parse(localStorage.getItem('moviesSearch'));
+
   // Фильмы полученные по поиску
   const [moviesSearch, setMoviesSearch] = React.useState(
     savedMoviesSearch ? savedMoviesSearch : []
@@ -194,6 +196,8 @@ const Movies = ({
             saveMovies={saveMovies}
             handleSaveMovies={handleSaveMovies}
             disabled={disabled}
+            handleDeleteMovie={handleDeleteMovie}
+            isAllMoviesDisplayed={isAllMoviesDisplayed}
           />
         )
       )}

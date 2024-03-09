@@ -11,6 +11,7 @@ const SavedMovies = ({
   errorFront,
   setErrorFront,
   disabled,
+  handleDeleteMovie
 }) => {
   const [showMovies, setShowMovies] = React.useState(saveMovies); // Фильмы
   const [isMoviesCheckbox, setIsMoviesCheckbox] = React.useState(false); // Короткометражки
@@ -53,7 +54,8 @@ const SavedMovies = ({
           <MoviesCardList
             handleSaveMovie={handleSaveMovie}
             saveMovies={showMovies}
-            disabled={disabled}       
+            disabled={disabled}
+            handleDeleteMovie={handleDeleteMovie}       
           />
         )
       )}

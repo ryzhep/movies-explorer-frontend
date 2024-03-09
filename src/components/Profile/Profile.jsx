@@ -16,8 +16,9 @@ function Profile({
 }) {
   const currentUser = useContext(CurrentUserContext);
   const [formProfile, setFormProfile] = useState({
-    name: currentUser.name,
-    email: currentUser.email
+    name: currentUser.name?.name || '',
+    email: currentUser.email?.email || ''
+
   });
   const [errors, setErrors] = useState({ name: '', email: '' });
 

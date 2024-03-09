@@ -12,7 +12,7 @@ import Profile from "../Profile/Profile";
 import Movies from "../Movies/Movies";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import SavedMovies from "../SavedMovies/SavedMovies";
-import { register, login, token } from "../../utils/auth";
+import { register, login, token, signOut } from "../../utils/auth";
 import { useLocation } from "react-router-dom";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import ProtectedRouteElement from "../ProtectedRouteElement/ProtectedRouteElement";
@@ -159,6 +159,18 @@ React.useEffect(() => {
       .finally(() => {
         setDisabled(false);
       });
+  };
+  // Выход из аккаунта
+  const handleSignOut = () => {
+    signOut()
+      .then(() => {
+        setLoggedIn(false);
+        setMovies([]);
+        setSearch('');
+        localStorage.clear();
+        navigate('/', { replace: true });
+      })
+      .catch(error => console.log(`Ошибка: ${error}`));
   };
 
  // Редактирование данных пользователя
@@ -307,6 +319,7 @@ React.useEffect(() => {
               <ProtectedRouteElement
               loggedIn={loggedIn}
               element={Profile}
+              onSignOut={handleSignOut}
               handleEditProfile={handleEditProfile}
               editInputProfileActive={editInputProfileActive}
               setEditInputProfileActive={setEditInputProfileActive}

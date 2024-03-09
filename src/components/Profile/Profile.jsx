@@ -12,7 +12,8 @@ function Profile({
   errorServer,
   setErrorServer,
   errorFront,
-  setErrorFront
+  setErrorFront,
+  onSignOut
 }) {
   const currentUser = useContext(CurrentUserContext);
   const [formProfile, setFormProfile] = useState({
@@ -154,7 +155,7 @@ function Profile({
           Редактировать
         </button>
       )}
-      <button  className="profile__button-signout" type="submit">
+      <button  className="profile__button-signout" type="submit" onClick={onSignOut}>
         Выйти из аккаунта
       </button>
     </section>

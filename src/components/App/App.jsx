@@ -21,23 +21,30 @@ import InfoTooltip from '../InfoTooltip/InfoTooltip';
 
 
 function App() {
-  const [currentUser, setCurrentUser] = React.useState({ email: "", name: "" });
-  const navigate = useNavigate();
+  const location = useLocation();
+  const [movies, setMovies] = React.useState([]); // Стейт фильмов
+  const [saveMovies, setSaveMovies] = React.useState([]); // Стейт сохраненных фильмов
+  const [currentUser, setCurrentUser] = React.useState({ email: '', name: '' });
   const auth = localStorage.getItem("auth");
   const [loggedIn, setLoggedIn] = React.useState(auth); // Пользователь авторизован
   const [errorServer, setErrorServer] = React.useState(""); // Сообщение об ошибке на стороне бэка
   const [disabled, setDisabled] = React.useState(false); // Неактивная кнопка
   const [preloader, setPreloader] = React.useState(false); //прелоадер
-  const [movies, setMovies] = React.useState([]); // Стейт фильмов
   const [errorFront, setErrorFront] = React.useState(""); // Сообщение об ошибке на стороне пользователя
   const [isSearch, setSearch] = React.useState(''); // Значение в поисковой строке
-  const [saveMovies, setSaveMovies] = React.useState([]); // Стейт сохраненных фильмов
   const [editInputProfileActive, setEditInputProfileActive] = React.useState(false); // Активация инпутов в профиле
   const [isInputProfileChanges, setInputProfileChanges] = React.useState(false); // Мониторинг изменений в профиле
   const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false); // Модальное окно с попапом
   const [tooltip, setTooltip] = React.useState({ message: '' }); // Сообщение в модальном окне
+  const navigate = useNavigate();
 
-  // Получение фильмов с сервера
+  React.useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      mainApi.getUserInfo(jwt);
+    }
+  }, []);
+    
 // Получение фильмов с сервера
 React.useEffect(() => {
   if (isSearch && movies.length === 0) {
@@ -92,8 +99,9 @@ React.useEffect(() => {
     setDisabled(true);
     login({ email, password })
       .then(data => {
-        localStorage.setItem('auth', true);
         localStorage.setItem("jwt", data.token);
+        localStorage.setItem('auth', true);
+  
         setLoggedIn(true);
         navigate('/movies', { replace: true });
         setCurrentUser(data);
@@ -180,7 +188,10 @@ React.useEffect(() => {
     .editUserInfo(newData)
     .then(data => {
       setCurrentUser(data.data);
+      setInputProfileChanges(false);
       setEditInputProfileActive(!editInputProfileActive);
+      setInfoTooltipOpen(true);
+      setTooltip({ message: 'Изменения сохранены!' });
     })
     .catch(error => {
       if (error === 409) {
@@ -197,16 +208,10 @@ React.useEffect(() => {
     });
 };
 
-  const location = useLocation();
 
 
-React.useEffect(() => {
-  const jwt = localStorage.getItem('jwt');
-  if (jwt) {
-    mainApi.getUserInfo(jwt);
-  }
-}, []);
-  
+
+
    // Добавление фильма в раздел "сохраненные фильмы"
    function handleSaveMovies(movie) {
     const movieData = {
@@ -292,48 +297,6 @@ React.useEffect(() => {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route
-            path="/signup"
-            element={
-              <Register
-                isRegisterUser={isRegisterUser}
-                setErrorServer={setErrorServer}
-                errorServer={errorServer}
-                disabled={disabled}
-              />
-            }
-          />
-          <Route
-            path="/signin"
-            element={
-              <Login
-                onLogin={handleLogin}
-                setErrorServer={setErrorServer}
-                disabled={disabled}
-                errorServer={errorServer}
-              />
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRouteElement
-              loggedIn={loggedIn}
-              element={Profile}
-              onSignOut={handleSignOut}
-              handleEditProfile={handleEditProfile}
-              editInputProfileActive={editInputProfileActive}
-              setEditInputProfileActive={setEditInputProfileActive}
-              setInputProfileChanges={setInputProfileChanges}
-              isInputProfileChanges={isInputProfileChanges}
-              disabled={disabled}
-              setErrorServer={setErrorServer}
-              errorServer={errorServer}
-              errorFront={errorFront}
-              setErrorFront={setErrorFront}
-              />
-            }
-          />
-          <Route
             path="/movies"
             element={
               <ProtectedRouteElement
@@ -355,7 +318,7 @@ React.useEffect(() => {
               />
             }
           />
-          <Route
+                    <Route
             path="/saved-movies"
             element={
               <ProtectedRouteElement
@@ -373,6 +336,51 @@ React.useEffect(() => {
               />
             }
           />
+                    <Route
+            path="/profile"
+            element={
+              <ProtectedRouteElement
+              loggedIn={loggedIn}
+                element={Profile}
+                handleEditProfile={handleEditProfile}
+                onSignOut={handleSignOut}
+                editInputProfileActive={editInputProfileActive}
+                setEditInputProfileActive={setEditInputProfileActive}
+                setInputProfileChanges={setInputProfileChanges}
+                isInputProfileChanges={isInputProfileChanges}
+                disabled={disabled}
+                setErrorServer={setErrorServer}
+                errorServer={errorServer}
+                errorFront={errorFront}
+                setErrorFront={setErrorFront}
+              />
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <Register
+                isRegisterUser={isRegisterUser}
+                setErrorServer={setErrorServer}
+                errorServer={errorServer}
+                disabled={disabled}
+              />
+            }
+          />
+          <Route
+            path="/signin"
+            element={
+              <Login
+                onLogin={handleLogin}
+                setErrorServer={setErrorServer}
+                disabled={disabled}
+                errorServer={errorServer}
+              />
+            }
+          />
+
+
+
           <Route path="*" element={<PageNotFound />} />
         </Routes>
         <InfoTooltip

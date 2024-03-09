@@ -1,8 +1,9 @@
 import { useState, useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
-import { validName, validEmail } from '../../utils/validation';
+import { validName, validEmail } from "../../utils/validation";
 
 function Profile({
+  onSignOut,
   disabled,
   setEditInputProfileActive,
   editInputProfileActive,
@@ -13,27 +14,26 @@ function Profile({
   setErrorServer,
   errorFront,
   setErrorFront,
-  onSignOut
 }) {
   const currentUser = useContext(CurrentUserContext);
   const [formProfile, setFormProfile] = useState({
-    name: currentUser.name?.name || '',
-    email: currentUser.email?.email || ''
+    email: currentUser.email,
+    name: currentUser.name,
 
   });
-  const [errors, setErrors] = useState({ name: '', email: '' });
+  const [errors, setErrors] = useState({ name: "", email: "" });
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
 
     setFormProfile({
       ...formProfile,
-      [name]: value
+      [name]: value,
     });
 
     const profileErrors = {
       ...errors,
-      [name]: name === 'name' ? validName(value) : validEmail(value)
+      [name]: name === "name" ? validName(value) : validEmail(value),
     };
 
     setErrors(profileErrors);
@@ -41,64 +41,69 @@ function Profile({
     // Проверка на наличие ошибок
     let hasInputErrors = false;
     for (let key in profileErrors) {
-      if (profileErrors[key] !== '') {
+      if (profileErrors[key] !== "") {
         hasInputErrors = true;
         break;
       }
     }
 
     if (hasInputErrors) {
-      setErrorFront('');
+      setErrorFront("");
     }
 
-    setErrorServer('');
+    setErrorServer("");
 
-    setInputProfileChanges(prevInfo => ({
+    setInputProfileChanges((prevInfo) => ({
       ...prevInfo,
-      [name]: name === 'name' || name === 'email' ? value !== currentUser[name] : prevInfo[name]
+      [name]:
+        name === "name" || name === "email"
+          ? value !== currentUser[name]
+          : prevInfo[name],
     }));
   };
 
   // Проверка на наличие изменений
-  const isProfileChange = Object.values(isInputProfileChanges).some(value => value);
+  const isProfileChange = Object.values(isInputProfileChanges).some(
+    (value) => value
+  );
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     // Сохранение ошибок валидации полей
     const profileErrors = {
       email: validEmail(formProfile.email),
-      name: validName(formProfile.name)
+      name: validName(formProfile.name),
     };
 
     setErrors(profileErrors);
 
     // Проверка на валидность
     const isFormValid =
-      Object.values(profileErrors).every(error => error === '') &&
-      Object.values(formProfile).every(value => value !== '');
+      Object.values(profileErrors).every((error) => error === "") &&
+      Object.values(formProfile).every((value) => value !== "");
 
     if (isFormValid) {
       handleEditProfile({ name: formProfile.name, email: formProfile.email });
-      setErrorFront('');
-      setErrorServer('');
+      setErrorFront("");
+      setErrorServer("");
     } else {
-      setErrorFront('Во время обновления профиля произошла ошибка');
+      setErrorFront("Во время обновления профиля произошла ошибка");
     }
   };
 
   // Переключение кнопки "редактировать"
   const buttonToggleEdit = () => {
     setEditInputProfileActive(!editInputProfileActive);
-    setErrorFront('');
-    setErrorServer('');
+    setErrorFront("");
+    setErrorServer("");
   };
 
   // Сохранение имени и эл.почты
   useEffect(() => {
     setFormProfile({
       name: currentUser.name,
-      email: currentUser.email
+      email: currentUser.email,
     });
   }, [currentUser]);
 
@@ -136,11 +141,13 @@ function Profile({
           />
           <span className="profile__error-validate">{errors.email}</span>
         </div>
-        <span className="profile__error-server">{errorFront || errorServer}</span>
+        <span className="profile__error-server">
+          {errorFront || errorServer}
+        </span>
         {editInputProfileActive && (
           <button
             className={`profile__button ${
-              (!isProfileChange || disabled) && 'profile__button_disabled'
+              (!isProfileChange || disabled) && "profile__button_disabled"
             }`}
             type="submit"
             onClick={handleSubmit}
@@ -155,7 +162,11 @@ function Profile({
           Редактировать
         </button>
       )}
-      <button  className="profile__button-signout" type="submit" onClick={onSignOut}>
+      <button
+        className="profile__button-signout"
+        type="submit"
+        onClick={onSignOut}
+      >
         Выйти из аккаунта
       </button>
     </section>

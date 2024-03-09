@@ -16,9 +16,10 @@ class MainApi {
     return fetch(`${this._baseUrl}/users/me`, {
       headers:{
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
+      "Authorization": `Bearer ${token}`,},
       credentials: 'include'
-      }
+    }).then(res => {
+      return this._checkResponse(res);
     });
   }
 
@@ -39,9 +40,13 @@ class MainApi {
 
 // удалить фильм
 deleteMovie(id) {
+  const token = localStorage.getItem('jwt');
     return fetch(`${this._baseUrl}/movies/${id}`, {
       method: 'DELETE',
-      headers: this._headers,
+      headers: {  Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
       credentials: 'include'
     }).then(res => {
       return this._checkResponse(res);
@@ -73,8 +78,10 @@ getSavedMovies() {
     headers:{
     "Content-Type": "application/json",
     "Authorization": `Bearer ${token}`,
+    },
     credentials: 'include'
-    }
+  }).then(res => {
+      return this._checkResponse(res);
   });
 }
 }

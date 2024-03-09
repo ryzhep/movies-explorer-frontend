@@ -17,6 +17,8 @@ import { useLocation } from "react-router-dom";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import ProtectedRouteElement from "../ProtectedRouteElement/ProtectedRouteElement";
 import { Movie_URL } from '../../utils/constants';
+import InfoTooltip from '../InfoTooltip/InfoTooltip';
+
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({ email: "", name: "" });
@@ -32,6 +34,8 @@ function App() {
   const [saveMovies, setSaveMovies] = React.useState([]); // Стейт сохраненных фильмов
   const [editInputProfileActive, setEditInputProfileActive] = React.useState(false); // Активация инпутов в профиле
   const [isInputProfileChanges, setInputProfileChanges] = React.useState(false); // Мониторинг изменений в профиле
+  const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false); // Модальное окно с попапом
+  const [tooltip, setTooltip] = React.useState({ message: '' }); // Сообщение в модальном окне
 
   // обрабатывает процесс аутентификации пользователя
   // сохраняет токен и данные в локальном хранилище
@@ -86,20 +90,21 @@ function App() {
       .then(() => {
         return login({ email, password });
       })
-      .then((data) => {
-        localStorage.setItem("jwt", data.token);
-        localStorage.setItem("auth", true);
+      .then(data => {
+        setInfoTooltipOpen(true);
+        setTooltip({ message: 'Вы успешно зарегистрировались!' });
+        localStorage.setItem('auth', true);
         setLoggedIn(true);
-        navigate("/movies", { replace: true });
+        navigate('/movies', { replace: true });
         setCurrentUser(data);
       })
-      .catch((error) => {
+      .catch(error => {
         if (error === 409) {
-          setErrorServer("Пользователь с таким email уже существует");
+          setErrorServer('Пользователь с таким email уже существует');
         } else if (error === 400) {
-          setErrorServer("При регистрации пользователя произошла ошибка");
+          setErrorServer('При регистрации пользователя произошла ошибка');
         } else {
-          setErrorServer("На сервере произошла ошибка");
+          setErrorServer('На сервере произошла ошибка');
         }
         console.log(`Ошибка: ${error}`);
       })
@@ -135,6 +140,7 @@ function App() {
   const location = useLocation();
 
   // Получение фильмов с сервера
+// Получение фильмов с сервера
 React.useEffect(() => {
   if (isSearch && movies.length === 0) {
     setPreloader(true);
@@ -150,9 +156,11 @@ React.useEffect(() => {
           localStorage.clear();
           return;
         }
+        setInfoTooltipOpen(true);
         setErrorServer(
           'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
         );
+        setTooltip({ message: `${errorServer}` });
         console.log(`Ошибка: ${error}`);
       })
       .finally(() => {
@@ -222,7 +230,10 @@ React.useEffect(() => {
         setDisabled(false);
       });
   }
-
+  // Закрытие попапа с сообщением
+  const closeAllPopups = () => {
+    setInfoTooltipOpen(false);
+  };
   // Сброс ошибок
   React.useEffect(() => {
     setErrorServer('');
@@ -316,6 +327,12 @@ React.useEffect(() => {
           />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllPopups}
+          tooltip={tooltip}
+          errorServer={errorServer}
+        />
         {["/", "/movies", "/saved-movies"].includes(location.pathname) && (
           <Footer />
         )}

@@ -17,6 +17,7 @@ const Movies = ({
   saveMovies,
   handleSaveMovies,
   disabled,
+  errorServer,
 }) => {
   const [movieDisplay, setMovieDisplay] = useState([]); // Фильмы на странице
   //Mы обновляем состояние movieDisplay с помощью метода setMovieDisplay, который передает фильмы полученные из API.
@@ -72,9 +73,6 @@ const Movies = ({
       });
   }, []);
 
-  const filteredMovies = isMoviesCheckbox
-    ? filterShotCheckBox(movieDisplay) // Применяем функцию фильтрации короткометражных фильмов
-    : movieDisplay; // Если чекбокс не выбран, отображаем все фильмы
 
   // Поиск по фильмам
   React.useEffect(() => {
@@ -170,7 +168,6 @@ const Movies = ({
     };
   }, [showMovies, moviesSearch, movies, isSearch, isMoviesCheckbox]);
 
-  console.log(filteredMovies);
   return (
     <section className="movies">
       <SearchForm
@@ -186,12 +183,12 @@ const Movies = ({
       />
       {preloader ? (
         <Preloader />
-      ) : filteredMovies.length === 0 && movies && movies.length > 0 ? (
-        <p className="movies__not-found">{errorMovies}</p>
+      ) : movieDisplay.length === 0 && movies && movies.length > 0 ? (
+        <p className="movies__not-found">{errorServer ? errorServer : errorMovies}</p>
       ) : (
-        filteredMovies.length > 0 && (
+        movieDisplay.length > 0 && (
           <MoviesCardList
-            movies={filteredMovies}
+            movies={movieDisplay}
             preloader={preloader}
             loadMore={loadMore}
             saveMovies={saveMovies}

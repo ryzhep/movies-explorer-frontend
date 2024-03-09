@@ -17,6 +17,7 @@ function SearchForm({
     setSearch(value);
     setErrorFront("");
   };
+  
   const handleSubmit = event => {
     event.preventDefault();
 

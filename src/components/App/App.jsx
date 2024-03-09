@@ -30,26 +30,28 @@ function App() {
   const [errorFront, setErrorFront] = React.useState(""); // Сообщение об ошибке на стороне пользователя
   const [isSearch, setSearch] = React.useState(''); // Значение в поисковой строке
   const [saveMovies, setSaveMovies] = React.useState([]); // Стейт сохраненных фильмов
+  const [editInputProfileActive, setEditInputProfileActive] = React.useState(false); // Активация инпутов в профиле
+  const [isInputProfileChanges, setInputProfileChanges] = React.useState(false); // Мониторинг изменений в профиле
 
   // обрабатывает процесс аутентификации пользователя
   // сохраняет токен и данные в локальном хранилище
   // устанавливая флаги состояний и осуществляя переход
   // Авторизация пользователя
   const handleLogin = ({ email, password }) => {
+    setDisabled(true);
     login({ email, password })
-      .then((data) => {
-        console.log("token");
-        localStorage.setItem("auth", true);
-        localStorage.setItem("jwt", token);
+      .then(data => {
+        localStorage.setItem('auth', true);
+        localStorage.setItem("jwt", data.token);
         setLoggedIn(true);
-        navigate("/movies", { replace: true });
+        navigate('/movies', { replace: true });
         setCurrentUser(data);
       })
-      .catch((error) => {
+      .catch(error => {
         if (error === 400) {
-          setErrorServer("При авторизации произошла ошибка");
+          setErrorServer('При авторизации произошла ошибка');
         } else if (error === 401) {
-          setErrorServer("Вы ввели неверный логин или пароль");
+          setErrorServer('Вы ввели неверный логин или пароль');
         }
         console.log(`Ошибка: ${error}`);
       })
@@ -106,22 +108,33 @@ function App() {
       });
   };
 
-  // Редактирование данных пользователя
-  const handleEditProfile = (newData) => {
-    mainApi
-      .editUserInfo(newData)
-      .then((data) => {
-        setCurrentUser(data.data);
-      })
-      .finally(() => {
-        console.log("редактирование не вышло");
-      });
-  };
+ // Редактирование данных пользователя
+ const handleEditProfile = newData => {
+  setDisabled(true);
+  mainApi
+    .editUserInfo(newData)
+    .then(data => {
+      setCurrentUser(data.data);
+      setEditInputProfileActive(!editInputProfileActive);
+    })
+    .catch(error => {
+      if (error === 409) {
+        setErrorServer('Пользователь с таким email уже существует');
+      } else if (error === 400) {
+        setErrorServer('Переданы некорректные данные при обновлении профиля');
+      } else {
+        setErrorServer('На сервере произошла ошибка');
+      }
+      console.log(`Ошибка: ${error}`);
+    })
+    .finally(() => {
+      setDisabled(false);
+    });
+};
 
   const location = useLocation();
 
   // Получение фильмов с сервера
-// Получение фильмов с сервера
 React.useEffect(() => {
   if (isSearch && movies.length === 0) {
     setPreloader(true);
@@ -148,24 +161,12 @@ React.useEffect(() => {
   }
 }, [isSearch, movies]);
 
-  React.useEffect(() => {
-    if (movies.length === 0) {
-      setPreloader(true);
-      moviesApi
-        .getMoviesAll()
-        .then((movies) => {
-          setMovies(movies);
-        })
-        .catch((error) => {
-          // Обработка ошибки
-          console.error("Произошла ошибка при загрузке фильмов:", error);
-        })
-        .finally(() => {
-          setPreloader(false);
-        });
-    }
-  }, [movies]);
-
+React.useEffect(() => {
+  const jwt = localStorage.getItem('jwt');
+  if (jwt) {
+    mainApi.getUserInfo(jwt);
+  }
+}, []);
   // Получение данных пользователя и сохраненных фильмов
   React.useEffect(() => {
     loggedIn &&
@@ -222,6 +223,12 @@ React.useEffect(() => {
       });
   }
 
+  // Сброс ошибок
+  React.useEffect(() => {
+    setErrorServer('');
+    setErrorFront('');
+    setEditInputProfileActive(false);
+  }, [location]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -260,8 +267,14 @@ React.useEffect(() => {
                 setErrorServer={setErrorServer}
                 loggedIn={loggedIn}
                 element={Profile}
+                editInputProfileActive={editInputProfileActive}
                 handleEditProfile={handleEditProfile}
                 disabled={disabled}
+                errorServer={errorServer}
+                setEditInputProfileActive={setEditInputProfileActive}
+                setInputProfileChanges={setInputProfileChanges}
+                isInputProfileChanges={isInputProfileChanges}
+                setErrorFront={setErrorFront}
               />
             }
           />

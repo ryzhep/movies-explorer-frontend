@@ -11,11 +11,12 @@ class MainApi {
   }
 
   //получаем данные профайла
-  getUserInfo() {
+  getUserInfo(token) {
     return fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
-    }).then((res) => {
-      return this._checkResponse(res);
+      headers:{
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+      }
     });
   }
 

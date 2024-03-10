@@ -12,12 +12,8 @@ class MainApi {
 
   //получаем данные профайла
   getUserInfo() {
-    const token = localStorage.getItem("jwt");
     return fetch(`${this._baseUrl}/users/me`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers:this._headers,
       credentials: "include",
     }).then((res) => {
       return this._checkResponse(res);
@@ -37,14 +33,9 @@ class MainApi {
 
   // удалить фильм
   deleteMovie(id) {
-    const token = localStorage.getItem("jwt");
     return fetch(`${this._baseUrl}/movies/${id}`, {
       method: "DELETE",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: this._headers,
       credentials: "include",
     }).then((res) => {
       return this._checkResponse(res);
@@ -53,14 +44,9 @@ class MainApi {
 
   // сохранить фильм
   saveMovies(movie) {
-    const token = localStorage.getItem("jwt");
     return fetch(`${this._baseUrl}/movies`, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: this._headers,
       credentials: "include",
       body: JSON.stringify({
         ...movie,
@@ -72,12 +58,8 @@ class MainApi {
 
   // показать сохраненные фильмы
   getSavedMovies() {
-    const token = localStorage.getItem("jwt");
     return fetch(`${this._baseUrl}/movies`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: this._headers,
       credentials: "include",
     }).then((res) => {
       return this._checkResponse(res);

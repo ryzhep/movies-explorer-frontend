@@ -1,12 +1,15 @@
-import React from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../../images/logo.svg";
 import Navigation from "../Navigation/Navigation";
-import ProfileNav from '../ProfileNav/ProfileNav';
-import BurgerMenu from "../BurgerMenu/BurgerMenu";
+import ProfileNav from "../ProfileNav/ProfileNav";
+import BurgerMenu from "../BurgerMenu/BurgerMenu"
+import logo from "../../images/logo.svg";
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+function Header(props) {
+  const loggedIn = props.loggedIn;
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   function handleBurgerMenuOpen() {
     setIsMenuOpen(true);
@@ -16,45 +19,47 @@ const Header = () => {
     setIsMenuOpen(false);
   }
 
-  const location = useLocation();
   return (
     <header className="header">
       <Link to="/" className="header__link">
-        <img src={logo} className="header__logo" alt="logo" />
+        <img src={logo} alt="logo" className="header__logo"  />
       </Link>
-      {(location.pathname === "/movies" ||
-        location.pathname === "/profile" ||
-        location.pathname === "/saved-movies") && (
+      {loggedIn && (
         <div className="header__navigation">
           <Navigation />
         </div>
       )}
-      {location.pathname === "/" && (
+      {location.pathname === "/" && !loggedIn ? (
         <div className="header__sign">
           <Link className="header__signup" to="/signup">
             Регистрация
           </Link>
           <Link className="header__signin" to="/signin">
-            <button type="submit" className="header__signin-button">
+            <button className="header__signin-button" type="submit">
               Войти
             </button>
           </Link>
         </div>
+      ) : (
+        ""
       )}
-      {(location.pathname === "/movies" ||
-        location.pathname === "/profile" ||
-        location.pathname === "/saved-movies") && (
+      {loggedIn && (
         <div className="header__profile">
           <ProfileNav />
         </div>
       )}
-    
-            {(location.pathname === "/movies" ||
-        location.pathname === "/profile" ||
-        location.pathname === "/saved-movies") && <button className="header__burger-button" onClick={handleBurgerMenuOpen} />}
-      <BurgerMenu isMenuOpen={isMenuOpen} handleBurgerMenuClose={handleBurgerMenuClose} />
+      {loggedIn && (
+        <button
+          className="header__burger-button"
+          onClick={handleBurgerMenuOpen}
+        />
+      )}
+      <BurgerMenu
+        isMenuOpen={isMenuOpen}
+        handleBurgerMenuClose={handleBurgerMenuClose}
+      />
     </header>
   );
-};
+}
 
 export default Header;

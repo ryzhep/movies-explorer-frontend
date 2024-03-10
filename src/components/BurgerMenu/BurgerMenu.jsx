@@ -1,9 +1,11 @@
-import ProfileNav from '../ProfileNav/ProfileNav';
-import Navigation from '../Navigation/Navigation';
+import ProfileNav from "../ProfileNav/ProfileNav";
+import Navigation from "../Navigation/Navigation";
 
 function BurgerMenu(props) {
   return (
-    <section className={`burger-menu ${props.isMenuOpen ? 'burger-menu_opened' : ''}`}>
+    <section
+      className={`burger-menu ${props.isMenuOpen ? "burger-menu_opened" : ""}`}
+    >
       <div className="burger-menu__container">
         <button
           className="burger-menu__button-close"

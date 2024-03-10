@@ -117,14 +117,14 @@ const Movies = ({
 
   React.useEffect(() => {
     // Обработка изменения размера окна
-    const handleScreenSizeWithTimeout = () => {
+    const handleScreenSizeWithTime = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         handleScreenSize();
       }, 800);
     };
 
-    handleScreenSizeWithTimeout();
+    handleScreenSizeWithTime();
     if (isMoviesCheckbox) {
       // Фильтр короткометражек
       const filteredShortFilms = filterShotCheckBox(moviesSearch);
@@ -140,9 +140,9 @@ const Movies = ({
       setMovieDisplay(displayedMoviesSlice);
     }
 
-    window.addEventListener('resize', handleScreenSizeWithTimeout);
+    window.addEventListener('resize', handleScreenSizeWithTime);
     return () => {
-      window.removeEventListener('resize', handleScreenSizeWithTimeout);
+      window.removeEventListener('resize', handleScreenSizeWithTime);
     };
   }, [showMovies, moviesSearch, movies, isSearch, isMoviesCheckbox]);
 

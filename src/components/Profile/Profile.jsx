@@ -15,12 +15,24 @@ function Profile({
   errorFront,
   setErrorFront,
 }) {
+
+
   const currentUser = useContext(CurrentUserContext);
   const [formProfile, setFormProfile] = useState({
-    email: currentUser.email,
     name: currentUser.name,
-
+    email: currentUser.email,
   });
+
+     // Сохранение имени и эл.почты
+     useEffect(() => {
+      if (currentUser && currentUser.name && currentUser.email) {
+          setFormProfile({
+              name: currentUser.name,
+              email: currentUser.email,
+          });
+      }
+  }, [currentUser]);
+  
   const [errors, setErrors] = useState({ name: "", email: "" });
 
   const handleChange = (event) => {
@@ -99,13 +111,7 @@ function Profile({
     setErrorServer("");
   };
 
-  // Сохранение имени и эл.почты
-  useEffect(() => {
-    setFormProfile({
-      name: currentUser.name,
-      email: currentUser.email,
-    });
-  }, [currentUser]);
+ 
 
   return (
     <section className="profile">

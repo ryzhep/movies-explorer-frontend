@@ -182,12 +182,15 @@ React.useEffect(() => {
   };
 
  // Редактирование данных пользователя
- const handleEditProfile = newData => {
+ const handleEditProfile = ({name, email}) => {
   setDisabled(true);
   mainApi
-    .editUserInfo(newData)
-    .then(data => {
-      setCurrentUser(data.data);
+    .editUserInfo({name, email})
+    .then(() => {
+      setCurrentUser((prevUser) => ({
+        ...prevUser, // сохраняем предыдущие свойства пользователя
+        ...{ name, email }, // обновляем только измененные свойства из data
+      }));
       setInputProfileChanges(false);
       setEditInputProfileActive(!editInputProfileActive);
       setInfoTooltipOpen(true);

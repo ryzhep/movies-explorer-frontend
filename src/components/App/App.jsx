@@ -186,11 +186,12 @@ function App() {
   const handleEditProfile = ({ name, email }) => {
     setDisabled(true);
     mainApi
-      .editUserInfo({ name, email })
+      .editUserInfo( name, email )
       .then(() => {
         setCurrentUser((prevUser) => ({
           ...prevUser, // сохраняем предыдущие свойства пользователя
-          ...{ name, email }, // обновляем только измененные свойства из data
+          name: name, // обновляем имя пользователя
+          email: email, // обновляем только измененные свойства из data
         }));
         setInputProfileChanges(false);
         setEditInputProfileActive(!editInputProfileActive);

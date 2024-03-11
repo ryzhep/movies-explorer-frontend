@@ -12,8 +12,13 @@ class MainApi {
 
   //получаем данные профайла
   getUserInfo() {
+    const token = localStorage.getItem("jwt");
     return fetch(`${this._baseUrl}/users/me`, {
-      headers:this._headers,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       credentials: "include",
     }).then((res) => {
       return this._checkResponse(res);
@@ -22,9 +27,14 @@ class MainApi {
 
   //измнение данных профайла
   editUserInfo(name, email) {
+    const token = localStorage.getItem("jwt");
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       credentials: 'include',
       body: JSON.stringify({ name: name, email: email }),
     });
@@ -33,9 +43,14 @@ class MainApi {
 
   // удалить фильм
   deleteMovie(id) {
+    const token = localStorage.getItem("jwt");
     return fetch(`${this._baseUrl}/movies/${id}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       credentials: "include",
     }).then((res) => {
       return this._checkResponse(res);
@@ -44,9 +59,14 @@ class MainApi {
 
   // сохранить фильм
   saveMovies(movie) {
+    const token = localStorage.getItem("jwt");
     return fetch(`${this._baseUrl}/movies`, {
       method: "POST",
-      headers: this._headers,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       credentials: "include",
       body: JSON.stringify({
         ...movie,
@@ -58,21 +78,25 @@ class MainApi {
 
   // показать сохраненные фильмы
   getSavedMovies() {
+    const token = localStorage.getItem("jwt");
     return fetch(`${this._baseUrl}/movies`, {
-      headers: this._headers,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       credentials: "include",
     }).then((res) => {
       return this._checkResponse(res);
     });
   }
 }
-const token = localStorage.getItem("jwt");
+
 export const mainApi = new MainApi({
   baseUrl: "https://api.ryzhep-movies.nomoredomainsmonster.ru",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
   },
   credentials: "include",
 });

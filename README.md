@@ -10,3 +10,6 @@ https://ryzhep-movies.nomoredomainsmonster.ru
 # Запросы делаются на поддомен:
 https://api.ryzhep-movies.nomoredomainsmonster.ru
 
+# Пулл-реквест
+https://github.com/ryzhep/movies-explorer-frontend/pull/2
+

@@ -75,3 +75,26 @@ export const Movies = [
       time: "1ч 17м"
     },
   ];
+
+  export const Movie_URL = "https://api.nomoreparties.co/";
+
+
+  export const filterShotCheckBox = (movies) => {
+    return movies.filter((movie) => movie.duration <= 40);
+  };
+
+  export const filterAllMovies = (isSearch, movies) => {
+    // Проверка, что movies является массивом перед использованием метода filter()
+    if (!Array.isArray(movies)) {
+      // Если movies не является массивом, вернуть пустой массив
+      return [];
+    }
+  
+    return movies.filter(
+      (movie) =>
+        movie.nameRU.toLowerCase().includes(isSearch.toLowerCase()) ||
+        movie.nameEN.toLowerCase().includes(isSearch.toLowerCase())
+    );
+  };
+  
+  

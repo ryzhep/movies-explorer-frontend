@@ -10,6 +10,7 @@
 @import url(./components/Main/Techs/techs.css);
 @import url(./components/Main/AboutMe/aboutMe.css);
 @import url(./components/Main/Portfolio/portfolio.css);
+@import url(./components/Preloader/Preloader.css);
 
 @import url(./components/Register/Register.css);
 @import url(./components/Profile/Profile.css);
@@ -21,7 +22,8 @@
 @import url(./components/MoviesCardList/moviesCardList.css);
 @import url(./components/ProfileNav/profileNav.css);
 @import url(./components/Movies/MoreMovies/moreMovies.css);
-
+@import url(./components/Login/Login.css);
+@import url(./components/InfoTooltip/infoTooltip.css);
 
 @import url(./components/PageNotFound/pageNotFound.css);
 @import url(./components/Navigation//Navigation.css);
